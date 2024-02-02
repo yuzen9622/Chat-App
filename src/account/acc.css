@@ -1,0 +1,99 @@
+.login,
+.sign {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login form,
+.sign form {
+    position: absolute;
+
+    top: 90%;
+    display: flex;
+    width: 40%;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+}
+
+.login .user,
+.sign .user,
+.search .user {
+    position: relative;
+    width: 80%;
+    padding: 5px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    z-index: 1;
+    position: absolute;
+    padding: 0 5px;
+    background-color: transparent;
+    left: 20px;
+    top: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(95, 99, 104);
+    transition: top 0.3s, font-size 0.3s;
+}
+
+.user input,
+.search input {
+    position: relative;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    padding: 10px;
+    width: 90%;
+    max-width: 300px;
+    margin-top: 10px;
+    transition: border-color 0.3s;
+}
+
+.login h1,
+.sign h1 {
+    font-family: 'Montserrat Alternates', sans-serif;
+}
+
+:is(.user, .search) input:focus {
+    outline: none;
+    border-color: #2196F3;
+}
+
+:is(.user, .search) input:focus+label,
+:is(.user, .search) input:not(:placeholder-shown)+label {
+    background-color: white;
+    color: #2196F3;
+    font-size: 13px;
+    top: 8px;
+    border-radius: 5px;
+
+
+}
+
+.login button,
+.sign button {
+    width: 75%;
+    height: 35px;
+    padding: 5px;
+    background-color: transparent;
+    color: white;
+    max-width: 250px;
+    border: none;
+    margin: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    background-color: rgb(0, 149, 246);
+
+}
+
+:is(.sign, .login) h3 {
+    font-family: 'Roboto Slab', serif;
+
+}

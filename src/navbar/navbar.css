@@ -1,0 +1,33 @@
+ul {
+    display: flex;
+    justify-content: space-between;
+    height: 60px;
+    align-items: center;
+    padding: 0 20px;
+}
+
+li {
+    font-family: 'Roboto Slab', serif;
+    list-style: none;
+}
+
+li h1 {
+    font-size: 30px;
+    font-family: 'Montserrat Alternates', sans-serif;
+}
+
+.log {
+    display: flex;
+}
+
+.nav a {
+    border: none;
+    background-color: transparent;
+    text-decoration: none;
+    padding: 5px;
+    color: black;
+}
+
+.nav a:hover {
+    text-decoration: underline;
+}
