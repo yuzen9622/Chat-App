@@ -17,7 +17,7 @@ export const ChatContextProvider = ({ children, user }) => {
     const [inChatUser, setInChatUser] = useState([])
 
     useEffect(() => {
-        const newSocket = io("http://localhost:8080");
+        const newSocket = io("https://chat-socket-97vj.onrender.com");
         setsocket(newSocket)
 
         return () => {
