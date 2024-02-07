@@ -5,27 +5,24 @@ export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("User")))
-    const navgative = useNavigate();
+    const navgate = useNavigate()
+
     const [signInfo, setSignInfo] = useState({
         name: "",
         email: "",
         password: ""
     })
+
     const updateSignInfo = useCallback((info) => {
         setSignInfo(info)
     }, [])
 
     const logoutUser = useCallback(() => {
-        window.location.reload()
+        navgate('/')
         sessionStorage.removeItem("User");
-        navgative('/login')
-
-
-
+        window.location.reload()
     })
-    useEffect(() => {
 
-    })
     return (
         <AuthContext.Provider value={{ user, signInfo, updateSignInfo, logoutUser }}>
             {children}

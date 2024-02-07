@@ -27,9 +27,10 @@ function Login() {
             .then((data) => {
 
                 let datas = {}
+                console.log(data)
                 if (data.name) {
 
-                    datas = { id: data._id, name: data.name }
+                    datas = { id: data._id, name: data.name, Avatar: data.Avatar, email: data.email }
                     sessionStorage.setItem("User", JSON.stringify(datas))
                     window.location.reload()
                     setlogin(false)
@@ -45,17 +46,12 @@ function Login() {
                 console.error(err);
             })
     }
-
-
-    console.log(islogin)
-
-
     useEffect(() => {
         setlogin(false)
         if (user !== null) {
             navigate('/chat')
 
-            console.log(user)
+
         }
 
     }, [user])
@@ -76,10 +72,11 @@ function Login() {
 
                 <div className="user">
 
-                    <input type="password" id="pass" required value={pass} placeholder=""
+                    <input type="password" id="pass" required value={pass} placeholder=" "
                         onChange={(e) => setPass(e.target.value)} />
                     <label htmlFor="pass">Password</label>
                 </div>
+
                 <h4>{loginError}</h4>
                 {islogin ? <button disabled >Login...</button> : <button type="submit">Log in</button>}
 

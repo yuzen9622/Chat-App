@@ -1,18 +1,31 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import './navbar.css'
-import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../Context/AuthContext'
+import { AuthContext } from '../Context/AuthContext';
+import Search from '../chat/search';
+import avarter from "../img/user.png"
+import { url } from '../servirce';
+
+import { ChatContext } from '../Context/ChatContext';
+
 function Navbar() {
     const { user, logoutUser } = useContext(AuthContext)
-
+    const { allUsers } = useContext(ChatContext)
+    const User = allUsers?.find(id => id._id === user.id)
+    console.log(User)
     return (
         <div className="nav">
             <nav>
                 <ul>
-                    <li><h1>Chatta</h1></li>
+                    <div className="log">
+                        <li><h1>Chatta</h1> </li>
+                        {user ? <li><Search /></li> : ""}
 
-                    {user ? <div><Link>Setting</Link><Link onClick={() => logoutUser()}>Logout</Link></div> :
+                    </div>
+
+                    {user ? <div className='nav-user'><Link to={'/chat'}><i class="fa-regular fa-comment-dots"></i><p>Chat</p></Link>
+                        <Link to={'/Profile'}><span><img src={User?.Avatar ? `${url}/${User?.Avatar}` : avarter} alt="" width="35px" /></span><p>Profile</p></Link>
+                        <Link to={'/'} onClick={() => logoutUser()}><i class="fa-solid fa-arrow-right-from-bracket"></i><p>Logout</p></Link></div> :
                         <div className='log'>
                             <li><Link to={'/login'}>Login</Link></li>
                             <li><Link to={'/sign'}>Register</Link></li>

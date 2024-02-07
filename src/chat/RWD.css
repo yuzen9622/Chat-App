@@ -1,0 +1,41 @@
+@media screen and (max-width:767px) {
+    .user-recip {
+        display: none;
+    }
+
+    .userlist {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .chat-list button {
+        width: 100%;
+
+    }
+
+    .userchat-list {
+        width: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chat-list {
+        width: auto;
+        min-width: 80px;
+    }
+
+    .img-online {
+
+        margin: 0;
+    }
+
+    .img-online img {
+        width: 60px;
+    }
+
+    .nav-user p {
+        display: none;
+    }
+
+}

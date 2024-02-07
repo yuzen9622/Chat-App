@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { AuthContext } from '../Context/AuthContext'
 function Sign() {
     const { signInfo, updateSignInfo } = useContext(AuthContext);
-    console.log(signInfo)
+
     let url = "http://localhost:5000/users/register"
     const sign = (e) => {
         e.preventDefault();

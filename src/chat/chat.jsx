@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../Context/AuthContext';
 import ChatBoard from './chatBoard';
 import Chatlist from './chatlist';
-import './chat.css'
+import './chat.css';
+import './RWD.css'
 function Chat() {
     const { user } = useContext(AuthContext);
     const navgitave = useNavigate()

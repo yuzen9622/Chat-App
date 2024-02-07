@@ -53,6 +53,7 @@ label {
     width: 90%;
     max-width: 300px;
     margin-top: 10px;
+    border-radius: 5px;
     transition: border-color 0.3s;
 }
 
@@ -61,9 +62,15 @@ label {
     font-family: 'Montserrat Alternates', sans-serif;
 }
 
+:is(.login, .sign) h4 {
+    color: rgb(237, 73, 86);
+}
+
 :is(.user, .search) input:focus {
     outline: none;
     border-color: #2196F3;
+    border-width: 2px;
+
 }
 
 :is(.user, .search) input:focus+label,

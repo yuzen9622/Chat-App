@@ -14,6 +14,7 @@ export const ChatContextProvider = ({ children, user }) => {
     const [notifications, setNotifications] = useState([]);
     const [allUsers, setAllUsers] = useState([])
     const [searchUser, setSearchUser] = useState(null)
+    const [inChatUser, setInChatUser] = useState([])
 
     useEffect(() => {
         const newSocket = io("http://localhost:8080");
@@ -49,9 +50,10 @@ export const ChatContextProvider = ({ children, user }) => {
 
 
         if (recipientId) {
+            if (newMessage == null) return
             socket.emit("sendMessage", { ...newMessage, recipientId });
         }
-    }, [socket, currentChat, newMessage]);
+    }, [socket, newMessage, currentChat]);
 
 
     useEffect(() => {
@@ -69,17 +71,17 @@ export const ChatContextProvider = ({ children, user }) => {
             const ischatOpen = currentChat?.members.some((id) => id === res.senderId);
             console.log(ischatOpen)
             if (ischatOpen) {
-                setNotifications((prev) => [{ ...res, isRead: true }, ...prev])
+                markthisread(currentChat?._id, res.senderId)
             } else {
                 setNotifications((prev) => [res, ...prev])
             }
         })
 
         return () => {
-            socket.off("getMessage", handleReceivedMessage);
+            socket.off("getMessage");
             socket.off("getNotification")
         };
-    }, [socket, currentChat]);
+    }, [socket, newMessage, currentChat]);
 
 
     useEffect(() => {
@@ -117,7 +119,7 @@ export const ChatContextProvider = ({ children, user }) => {
             getUser()
         }
 
-    }, [userChats])
+    }, [userChats, searchUser])
 
 
 
@@ -134,7 +136,7 @@ export const ChatContextProvider = ({ children, user }) => {
             }
         }
         getUserchat()
-    }, [user]);
+    }, [user, notifications, currentChat]);
 
     useEffect(() => {
         const getMessage = () => {
@@ -151,11 +153,14 @@ export const ChatContextProvider = ({ children, user }) => {
 
 
     const updateCurrentChat = useCallback((chat) => {
+
+        if (chat?.members[0] == currentChat?.members[0] || chat?.members[1] == currentChat?.members[1]) return;
+
         setCurrentChat(chat)
 
-    })
+    }, [])
 
-    const sendMessage = useCallback((textmessage, sender, currentChatId, setTextmessage) => {
+    const sendMessage = useCallback((textmessage, sender, currentChatId, isRead) => {
 
         if (!textmessage) return null
 
@@ -165,7 +170,8 @@ export const ChatContextProvider = ({ children, user }) => {
                 body: JSON.stringify({
                     chatId: currentChatId,
                     senderId: sender.id,
-                    text: textmessage
+                    text: textmessage,
+                    isRead: isRead
                 }), headers: { "Content-Type": "application/json" }
             }).then((res) => res.json())
             .then((data) => {
@@ -177,7 +183,7 @@ export const ChatContextProvider = ({ children, user }) => {
             .catch((err) => {
                 console.error(err);
             })
-    })
+    }, [])
 
     const createChat = useCallback((firstId, secondId) => {
         fetch(`${url}/chat`, {
@@ -193,26 +199,10 @@ export const ChatContextProvider = ({ children, user }) => {
                 console.error(err);
             })
     }, [])
+    const delChat = useCallback((userId, secondId) => {
 
-    const markNotificationRead = useCallback((notifications, userChats, n) => {
-        const desireChat = userChats?.find((chat) => {
-            const chatmembers = [user.id, n.senderId]
-            const isDesiredChat = chat?.members.every((member) => {
-                return chatmembers.includes(member)
-            })
-            return isDesiredChat
-        })
-        const mNotitfication = notifications.map(el => {
-            if (n.senderId === el.senderId) {
-                return { ...n, isRead: true }
-            } else {
-                return el
-            }
-        })
-
-        updateCurrentChat(desireChat)
-        setNotifications(mNotitfication)
     })
+
     const markthisNotificationRead = useCallback((thisNoifications, notifications) => {
         const mNotitfication = notifications.map(el => {
             let notification
@@ -225,9 +215,18 @@ export const ChatContextProvider = ({ children, user }) => {
             });
             return notification
         })
-        setNotifications(mNotitfication)
-    })
 
+        setNotifications(mNotitfication)
+    }, [])
+    const markthisread = useCallback((chatId, senderId) => {
+        if (chatId && senderId) {
+            fetch(`${url}/msg/read/${chatId}/${senderId}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    setMessages(data)
+                })
+        }
+    }, [])
     const search = useCallback((name, userId) => {
         fetch(`${url}/users/findname/${name}`)
             .then((res) => res.json())
@@ -238,17 +237,7 @@ export const ChatContextProvider = ({ children, user }) => {
                     let isChatCreated = false
                     if (userId === u._id) return false
 
-                    if (userChats) {
-                        userChats?.some((chat) => {
 
-                            if (chat.members[0] === u._id || chat.members[1] === u._id) {
-                                isChatCreated = true;
-                                return true;
-                            }
-                            return false;
-
-                        })
-                    }
 
                     return !isChatCreated
 
@@ -261,7 +250,23 @@ export const ChatContextProvider = ({ children, user }) => {
                 setSearchUser(null)
                 console.error(err);
             })
-    })
+    }, [])
 
-    return <ChatContext.Provider value={{ userChats, potentialChats, createChat, updateCurrentChat, currentChat, messages, sendMessage, onlineUser, newMessage, notifications, allUsers, markNotificationRead, markthisNotificationRead, search, searchUser }}>{children}</ChatContext.Provider>
+    return <ChatContext.Provider value={{
+        userChats,
+        potentialChats,
+        createChat,
+        updateCurrentChat,
+        currentChat,
+        messages,
+        sendMessage,
+        onlineUser,
+        newMessage,
+        notifications,
+        allUsers,
+        markthisNotificationRead,
+        search,
+        searchUser,
+        markthisread
+    }}>{children}</ChatContext.Provider>
 }
