@@ -16,7 +16,7 @@ export const ChatContextProvider = ({ children, user }) => {
     const [searchUser, setSearchUser] = useState(null)
 
     useEffect(() => {
-        const newSocket = io("https://chat-server-sst6.onrender.com");
+        const newSocket = io("https://chat-socket-97vj.onrender.com");
         setsocket(newSocket)
 
         return () => {
