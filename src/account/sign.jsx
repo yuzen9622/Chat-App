@@ -1,13 +1,14 @@
 import React from 'react'
 import { useContext } from 'react'
 import { AuthContext } from '../Context/AuthContext'
+import { url } from '../servirce';
 function Sign() {
     const { signInfo, updateSignInfo } = useContext(AuthContext);
 
-    let url = "http://localhost:5000/users/register"
+
     const sign = (e) => {
         e.preventDefault();
-        fetch(url, {
+        fetch(`${url}/users/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(signInfo)

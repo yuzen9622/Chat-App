@@ -30,21 +30,7 @@ export const useFetchRecipinet = (chat, user) => {
     return { recipinetUser }
 }
 
-export const useFetchUser = async (userId) => {
-    const [user, setUser] = useState(null)
-    useEffect(() => {
-        const getUser = () => {
-            const response = fetch(`${url}/users/find/${userId}`)
-            if (response.ok) {
-                const data = response.json();
-                setUser(data)
-            }
-        }
-        getUser()
-    })
 
-    return { user }
-}
 export const useFetchLastMessage = (chat) => {
     const { newMessage, notifications, messages } = useContext(ChatContext);
     const [lastestMessage, setLastestMessage] = useState(null);

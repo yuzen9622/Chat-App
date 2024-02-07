@@ -14,10 +14,9 @@ export const ChatContextProvider = ({ children, user }) => {
     const [notifications, setNotifications] = useState([]);
     const [allUsers, setAllUsers] = useState([])
     const [searchUser, setSearchUser] = useState(null)
-    const [inChatUser, setInChatUser] = useState([])
 
     useEffect(() => {
-        const newSocket = io("https://chat-socket-97vj.onrender.com");
+        const newSocket = io("https://chat-server-sst6.onrender.com");
         setsocket(newSocket)
 
         return () => {
@@ -50,7 +49,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
 
         if (recipientId) {
-            if (newMessage == null) return
+
             socket.emit("sendMessage", { ...newMessage, recipientId });
         }
     }, [socket, newMessage, currentChat]);
@@ -70,7 +69,9 @@ export const ChatContextProvider = ({ children, user }) => {
         socket.on("getNotification", (res) => {
             const ischatOpen = currentChat?.members.some((id) => id === res.senderId);
             console.log(ischatOpen)
+
             if (ischatOpen) {
+
                 markthisread(currentChat?._id, res.senderId)
             } else {
                 setNotifications((prev) => [res, ...prev])
@@ -83,7 +84,7 @@ export const ChatContextProvider = ({ children, user }) => {
         };
     }, [socket, newMessage, currentChat]);
 
-
+    console.log(messages)
     useEffect(() => {
         if (user) {
             const getUser = () => {
@@ -154,11 +155,11 @@ export const ChatContextProvider = ({ children, user }) => {
 
     const updateCurrentChat = useCallback((chat) => {
 
-        if (chat?.members[0] == currentChat?.members[0] || chat?.members[1] == currentChat?.members[1]) return;
+        // if (chat?.members[0] == currentChat?.members[0] || chat?.members[1] == currentChat?.members[1]) return;
 
         setCurrentChat(chat)
 
-    }, [])
+    })
 
     const sendMessage = useCallback((textmessage, sender, currentChatId, isRead) => {
 
