@@ -28,7 +28,7 @@ function UserChat({ chat, user }) {
                     <div className="list">
                         <div className="img-online">
 
-                            <img src={recipinetUser?.Avatar ? `${url}/${recipinetUser?.Avatar}` : avarter} alt="img" />
+                            <img src={recipinetUser?.Avatar ? `${url}/users/avatar/${recipinetUser?._id}` : avarter} alt="img" />
                             <div className={onlineUser?.some((user) => user.userId === recipinetUser?._id) ? "online" : ""}></div>
                         </div>
 

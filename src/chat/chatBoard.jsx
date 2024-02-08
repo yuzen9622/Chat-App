@@ -26,7 +26,7 @@ function ChatBoard() {
             {!recipinetUser ? <p style={{ textAlign: "center", width: "100%" }}>No conversation yet...</p> : <><div className="chat-board">
                 <div className="chat-title">
                     <div className="chat-img">
-                        <img src={recipinetUser?.Avatar ? `${url}/${recipinetUser?.Avatar}` : avarter} alt="" />
+                        <img src={recipinetUser?.Avatar ? `${url}/users/avatar/${recipinetUser?._id}` : avarter} alt="" />
                         <div className={onlineUser?.some((user) => user.userId === recipinetUser?._id) ? "online" : ""}></div>
 
                     </div>

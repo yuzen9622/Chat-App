@@ -19,7 +19,7 @@ function Profile() {
                 .then((data) => {
                     user.Avatar = data.Avatar
                     const sessionUser = JSON.parse(sessionStorage.getItem("User"));
-                    sessionUser.Avatar = data.Avatar;
+
                     sessionStorage.setItem("User", JSON.stringify(sessionUser))
                     window.location.reload()
                     console.log(sessionUser)
@@ -33,7 +33,7 @@ function Profile() {
         <div className="profile">
 
             <div className="profile-img">
-                <img src={user?.Avatar ? `${url}/${user.Avatar}` : avarter} alt="user-avatar" />
+                <img src={user?.Avatar ? `${url}/users/avatar/${user.id}` : avarter} alt="user-avatar" />
             </div>
             <div className="profile-name">
                 <h1 className='name'>{user?.name}<button><i class="fa-solid fa-pencil"></i></button></h1>
