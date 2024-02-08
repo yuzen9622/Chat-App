@@ -57,6 +57,7 @@ function Login() {
     }, [user])
     return (
         <div className="login">
+
             <h1>Chatta</h1>
             <h3>Login</h3>
             <form autoFocus onSubmit={(e) => { login(e); setlogin(true); }}>

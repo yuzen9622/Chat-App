@@ -21,6 +21,7 @@ function ChatBoard() {
 
         scroll.current?.scrollIntoView({ behavior: "smooth" })
     }, [currentChat, messages])
+    console.log(messages, lastestMessage)
     return (
         <>
             {!recipinetUser ? <p style={{ textAlign: "center", width: "100%" }}>No conversation yet...</p> : <><div className="chat-board">
@@ -28,7 +29,6 @@ function ChatBoard() {
                     <div className="chat-img">
                         <img src={recipinetUser?.Avatar ? `${url}/users/avatar/${recipinetUser?._id}` : avarter} alt="" />
                         <div className={onlineUser?.some((user) => user.userId === recipinetUser?._id) ? "online" : ""}></div>
-
                     </div>
                     <h1>{recipinetUser.name}</h1>
 

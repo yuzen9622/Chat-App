@@ -87,34 +87,34 @@ export const ChatContextProvider = ({ children, user }) => {
     console.log(messages)
     useEffect(() => {
         if (user) {
-            const getUser = () => {
-                fetch(`${url}/users`)
-                    .then((res) => res.json())
-                    .then((data) => {
-                        const pChats = data.filter((u) => {
-                            let isChatCreated = false
-                            if (user.id === u._id) return false
+            const getUser = async () => {
+                const response = await fetch(`${url}/users`)
+                const data = await response.json()
 
-                            if (userChats) {
-                                userChats?.some((chat) => {
+                const pChats = await data.filter((u) => {
+                    let isChatCreated = false
+                    if (user.id === u._id) return false
 
-                                    if (chat.members[0] === u._id || chat.members[1] === u._id) {
-                                        isChatCreated = true;
-                                        return true;
-                                    }
-                                    return false;
+                    if (userChats) {
+                        userChats?.some((chat) => {
 
-                                })
+                            if (chat.members[0] === u._id || chat.members[1] === u._id) {
+                                isChatCreated = true;
+                                return true;
                             }
-
-                            return !isChatCreated
-
+                            return false;
 
                         })
+                    }
 
-                        setPotentialChats(pChats);
-                        setAllUsers(data)
-                    })
+                    return !isChatCreated
+
+
+                })
+
+                setPotentialChats(pChats);
+                setAllUsers(data)
+
 
             }
             getUser()
@@ -127,30 +127,33 @@ export const ChatContextProvider = ({ children, user }) => {
 
     useEffect(() => {
 
-        const getUserchat = () => {
+        const getUserchat = async () => {
             if (user?.id) {
-                fetch(`${url}/chat/${user?.id}`)
-                    .then((res) => res.json())
-                    .then((data) => {
-                        setUserChat(data)
-                    })
+                try {
+                    const response = await fetch(`${url}/chat/${user?.id}`);
+                    const data = await response.json();
+                    setUserChat(data);
+                } catch (error) {
+                    console.error('Error fetching user chat:', error);
+
+                }
             }
         }
         getUserchat()
     }, [user, notifications, currentChat]);
 
     useEffect(() => {
-        const getMessage = () => {
+        const getMessage = async () => {
+            try {
+                const response = await fetch(`${url}/msg/${currentChat?._id}`)
+                const data = await response.json();
+                setMessages(data)
+            } catch (err) {
 
-            fetch(`${url}/msg/${currentChat?._id}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    setMessages(data)
-                })
-
+            }
         }
         getMessage()
-    }, [currentChat])
+    }, [currentChat, newMessage])
 
 
     const updateCurrentChat = useCallback((chat) => {
@@ -161,29 +164,27 @@ export const ChatContextProvider = ({ children, user }) => {
 
     })
 
-    const sendMessage = useCallback((textmessage, sender, currentChatId, isRead) => {
+    const sendMessage = useCallback(async (textmessage, sender, currentChatId, isRead) => {
 
         if (!textmessage) return null
+        try {
+            const response = await fetch(`${url}/msg`,
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+                        chatId: currentChatId,
+                        senderId: sender.id,
+                        text: textmessage,
+                        isRead: isRead
+                    }), headers: { "Content-Type": "application/json" }
+                })
+            const data = await response.json()
+            setNewMessage(data)
+            setMessages((prev) => [...prev, data])
+        } catch (err) {
 
-        fetch(`${url}/msg`,
-            {
-                method: "POST",
-                body: JSON.stringify({
-                    chatId: currentChatId,
-                    senderId: sender.id,
-                    text: textmessage,
-                    isRead: isRead
-                }), headers: { "Content-Type": "application/json" }
-            }).then((res) => res.json())
-            .then((data) => {
+        }
 
-                setNewMessage(data)
-                setMessages((prev) => [...prev, data])
-
-            })
-            .catch((err) => {
-                console.error(err);
-            })
     }, [])
 
     const createChat = useCallback((firstId, secondId) => {
@@ -219,16 +220,20 @@ export const ChatContextProvider = ({ children, user }) => {
 
         setNotifications(mNotitfication)
     }, [])
-    const markthisread = useCallback((chatId, senderId) => {
+    const markthisread = useCallback(async (chatId, senderId) => {
         if (chatId && senderId) {
-            fetch(`${url}/msg/read/${chatId}/${senderId}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    setMessages(data)
-                })
+            try {
+                const response = await fetch(`${url}/msg/read/${chatId}/${senderId}`)
+                const data = await response.json()
+                console.log(data)
+                setMessages(data)
+            } catch (error) {
+
+            }
         }
     }, [])
     const search = useCallback((name, userId) => {
+        if (name == "") setSearchUser(null);
         fetch(`${url}/users/findname/${name}`)
             .then((res) => res.json())
             .then((data) => {

@@ -8,19 +8,17 @@ export const useFetchRecipinet = (chat, user) => {
     const recipinetId = chat?.members.find((id) => id !== user?.id)
 
     useEffect(() => {
-        const getUser = () => {
+        const getUser = async () => {
 
             if (!recipinetId) return null
-            fetch(`${url}/users/find/${recipinetId}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data) {
+            try {
+                const response = await fetch(`${url}/users/find/${recipinetId}`)
+                const data = await response.json()
+                setRecipinetUser(data)
+            } catch (error) {
 
-                        setRecipinetUser(data)
+            }
 
-                    }
-
-                })
         }
         getUser()
 
@@ -37,14 +35,15 @@ export const useFetchLastMessage = (chat) => {
 
     useEffect(() => {
 
-        const getMessage = () => {
+        const getMessage = async () => {
+            try {
+                const response = await fetch(`${url}/msg/${chat?._id}`)
+                const data = await response.json()
+                const lastmessage = data[data?.length - 1];
+                setLastestMessage(lastmessage)
+            } catch (error) {
 
-            fetch(`${url}/msg/${chat?._id}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    const lastmessage = data[data?.length - 1];
-                    setLastestMessage(lastmessage)
-                })
+            }
 
         }
         getMessage()
