@@ -2,10 +2,10 @@ import React, { useContext, useEffect } from 'react'
 import { ChatContext } from '../Context/ChatContext'
 import { AuthContext } from '../Context/AuthContext'
 import UserChat from './userchat'
-import { Link } from 'react-router-dom'
+
 
 function Chatlist() {
-    const { userChats, updateCurrentChat } = useContext(ChatContext)
+    const { userChats, updateCurrentChat, lodingChat, markthisNotificationRead, markthisread } = useContext(ChatContext)
     const { user } = useContext(AuthContext)
 
     function active(node) {
@@ -49,16 +49,19 @@ function Chatlist() {
                 </div>
 
 
-                {
+                {!lodingChat ?
                     userChats?.map((chat, index) => (
-                        <div className="userchat-list" key={index} onClick={() => { updateCurrentChat(chat); active(index) }}>
+
+                        <div className="userchat-list" key={index} onClick={() => { updateCurrentChat(chat); active(index); }}>
 
                             <UserChat user={user} chat={chat} key={index} />
-                        </div>
-                    ))
-                }
 
-            </div>
+                        </div>
+
+                    ))
+                    : <div className='load-div'><div className='loader'></div></div>}
+
+            </div >
 
         </>
     )

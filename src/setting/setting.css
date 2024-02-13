@@ -19,13 +19,13 @@
 
 }
 
-.profile-name :is(h1, h2) {
+.profile-user :is(h1, h2) {
     display: flex;
-    align-items: flex-end;
+
     font-size: 1.3rem;
 }
 
-.profile-name button {
+.profile-user button {
     padding: 5px;
     height: 32px;
     border: none;
@@ -33,6 +33,17 @@
     border-radius: 5px;
 }
 
-.profile-name button:hover {
+.profile-user button:hover {
     background-color: rgb(239, 239, 239);
+}
+
+.profile-alt {
+    display: flex;
+    align-content: center;
+}
+
+.profile-alt pre {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

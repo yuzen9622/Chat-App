@@ -4,7 +4,7 @@ import { url } from "../servirce";
 
 export const useFetchRecipinet = (chat, user) => {
     const [recipinetUser, setRecipinetUser] = useState(null);
-
+    const [loading, setLoading] = useState(false)
     const recipinetId = chat?.members.find((id) => id !== user?.id)
 
     useEffect(() => {
@@ -12,9 +12,11 @@ export const useFetchRecipinet = (chat, user) => {
 
             if (!recipinetId) return null
             try {
+                setLoading(true)
                 const response = await fetch(`${url}/users/find/${recipinetId}`)
                 const data = await response.json()
                 setRecipinetUser(data)
+                setLoading(false)
             } catch (error) {
 
             }
@@ -25,7 +27,7 @@ export const useFetchRecipinet = (chat, user) => {
 
     }, [recipinetId])
 
-    return { recipinetUser }
+    return { recipinetUser, loading }
 }
 
 

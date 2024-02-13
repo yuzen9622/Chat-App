@@ -14,6 +14,8 @@ export const ChatContextProvider = ({ children, user }) => {
     const [notifications, setNotifications] = useState([]);
     const [allUsers, setAllUsers] = useState([])
     const [searchUser, setSearchUser] = useState(null)
+    const [lodingChat, setLodingChat] = useState(true)
+    const [loadingUser, setLoadingUser] = useState(true)
 
     useEffect(() => {
         const newSocket = io("https://chat-socket-97vj.onrender.com");
@@ -71,7 +73,6 @@ export const ChatContextProvider = ({ children, user }) => {
             console.log(ischatOpen)
 
             if (ischatOpen) {
-
                 markthisread(currentChat?._id, res.senderId)
             } else {
                 setNotifications((prev) => [res, ...prev])
@@ -128,11 +129,14 @@ export const ChatContextProvider = ({ children, user }) => {
     useEffect(() => {
 
         const getUserchat = async () => {
+
             if (user?.id) {
                 try {
+
                     const response = await fetch(`${url}/chat/${user?.id}`);
                     const data = await response.json();
                     setUserChat(data);
+                    setLodingChat(false)
                 } catch (error) {
                     console.error('Error fetching user chat:', error);
 
@@ -140,14 +144,18 @@ export const ChatContextProvider = ({ children, user }) => {
             }
         }
         getUserchat()
-    }, [user, notifications, currentChat]);
+    }, [user, notifications]);
 
     useEffect(() => {
+
         const getMessage = async () => {
+
             try {
+
                 const response = await fetch(`${url}/msg/${currentChat?._id}`)
                 const data = await response.json();
                 setMessages(data)
+                setLoadingUser(false)
             } catch (err) {
 
             }
@@ -158,8 +166,8 @@ export const ChatContextProvider = ({ children, user }) => {
 
     const updateCurrentChat = useCallback((chat) => {
 
-        // if (chat?.members[0] == currentChat?.members[0] || chat?.members[1] == currentChat?.members[1]) return;
-
+        if (chat?.members[0] == currentChat?.members[0] || chat?.members[1] == currentChat?.members[1]) return;
+        setLoadingUser(true)
         setCurrentChat(chat)
 
     })
@@ -220,7 +228,9 @@ export const ChatContextProvider = ({ children, user }) => {
 
         setNotifications(mNotitfication)
     }, [])
+
     const markthisread = useCallback(async (chatId, senderId) => {
+        if (senderId == user.id) return
         if (chatId && senderId) {
             try {
                 const response = await fetch(`${url}/msg/read/${chatId}/${senderId}`)
@@ -232,6 +242,7 @@ export const ChatContextProvider = ({ children, user }) => {
             }
         }
     }, [])
+
     const search = useCallback((name, userId) => {
         if (name == "") setSearchUser(null);
         fetch(`${url}/users/findname/${name}`)
@@ -273,6 +284,8 @@ export const ChatContextProvider = ({ children, user }) => {
         markthisNotificationRead,
         search,
         searchUser,
-        markthisread
+        markthisread,
+        lodingChat,
+        loadingUser
     }}>{children}</ChatContext.Provider>
 }

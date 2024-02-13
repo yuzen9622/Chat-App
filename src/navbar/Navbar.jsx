@@ -24,7 +24,7 @@ function Navbar() {
                     </div>
 
                     {user ? <div className='nav-user'><Link to={'/chat'}><i class="fa-regular fa-comment-dots"></i><p>Chat</p></Link>
-                        <Link to={'/Profile'}><span><img src={User?.Avatar ? `${url}/users/avatar/${user?.id}` : avarter} alt="" width="35px" /></span><p>Profile</p></Link>
+                        <Link to={'/Profile'}><span>{User?.Avatar ? <img src={User?.Avatar ? `${url}/users/avatar/${user?.id}` : avarter} alt="" width="35px" /> : <> <div className='img-glimmer-line'></div></>}</span><p>Profile</p></Link>
                         <Link to={'/'} onClick={() => logoutUser()}><i class="fa-solid fa-arrow-right-from-bracket"></i><p>Logout</p></Link></div> :
                         <div className='log'>
                             <li><Link to={'/login'}>Login</Link></li>
