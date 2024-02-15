@@ -21,7 +21,12 @@ function ChatBoard() {
 
         scroll.current?.scrollIntoView({ behavior: "smooth" })
     }, [currentChat, messages])
-    console.log(messages, lastestMessage)
+    const spliceEmail = (email) => {
+        const mailId = email.split("@");
+        const id = "@" + mailId[0];
+        return id
+    }
+
     return (
 
         <>
@@ -33,7 +38,8 @@ function ChatBoard() {
                             <img src={recipinetUser?.Avatar ? `${url}/users/avatar/${recipinetUser?._id}` : avarter} alt="" />
                             <div className={onlineUser?.some((user) => user.userId === recipinetUser?._id) ? "online" : ""}></div>
                         </div>
-                        <h1>{recipinetUser.name}</h1>
+                        <div style={{ display: "flex", flexDirection: "column" }}> <h1>{recipinetUser.name}</h1>
+                            <pre>{spliceEmail(recipinetUser?.email)}</pre></div>
 
                     </div>
                     <div className="chat-main">
@@ -50,7 +56,7 @@ function ChatBoard() {
 
                     <div className="chat-input">
 
-                        <InputEmoji value={textmessage} onChange={setTextmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />
+                        <InputEmoji keepOpened onChange={setTextmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />
                         {textmessage &&
                             <button className={textmessage == "" ? "btn" : "btn istext"} type='button' onClick={() => { sendMessage(textmessage, user, currentChat._id, false, sendMessage); setTextmessage("") }}><i class="fa-solid fa-paper-plane"></i></button>
                         }

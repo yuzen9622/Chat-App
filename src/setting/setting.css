@@ -25,15 +25,29 @@
     font-size: 1.3rem;
 }
 
-.profile-user button {
+.profile-user :is(button, a) {
     padding: 5px;
     height: 32px;
     border: none;
-    background-color: transparent;
+    background-color: rgb(239, 239, 239);
     border-radius: 5px;
+    margin: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #000;
+
 }
 
-.profile-user button:hover {
+.profile-user p {
+    margin-bottom: 10px;
+}
+
+#copy-btn {
+    background-color: transparent;
+}
+
+.profile-user #copy-btn:hover {
     background-color: rgb(239, 239, 239);
 }
 
@@ -46,4 +60,85 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/*Edit*/
+.edit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    margin: 0 10px;
+
+}
+
+.edit-img {
+    width: 40%;
+    margin-right: 10px;
+    max-width: 100px;
+    min-width: 80px;
+}
+
+.edit-img img {
+    border-radius: 50%;
+    width: 100%;
+
+}
+
+.edit-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 350px;
+}
+
+.edit-user :is(h1, h2) {
+    display: flex;
+    font-size: 1.3rem;
+}
+
+.edit-user button {
+    padding: 5px;
+    height: 32px;
+    border: none;
+    background-color: rgb(239, 239, 239);
+    border-radius: 5px;
+    margin: 5px;
+    font-weight: 600;
+
+}
+
+#copy-btn {
+    background-color: transparent;
+}
+
+.edit-user #copy-btn:hover {
+    background-color: rgb(239, 239, 239);
+}
+
+.edit-alt {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    margin: 5px;
+}
+
+.edit-alt input {
+    font-size: 18px;
+    padding: 5px;
+}
+
+.edit-alt pre {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-user textarea {
+    width: 250px;
+    padding: 5px;
+    max-width: 250px;
+    resize: vertical;
+    font-size: 18px;
+    max-height: 250px;
 }

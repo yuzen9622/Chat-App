@@ -9,6 +9,7 @@ import { AuthContext } from './Context/AuthContext';
 import Navbar from './navbar/Navbar';
 import { ChatContextProvider } from './Context/ChatContext';
 import Setting from './setting/Setting';
+import EditProfile from './setting/Edit-Profile';
 function App() {
   const { user } = useContext(AuthContext);
   console.log(user ? 1 : 0)
@@ -23,6 +24,7 @@ function App() {
           <Route path='/sign' element={<Sign />} />
           <Route path='/chat' element={user ? <Chat /> : <Login />} />
           <Route path='/Profile' element={<Setting />} />
+          <Route path='/Edit' element={<EditProfile />} />
           <Route path='/' element={user ? <Navigate to="/chat" /> : <Navigate to='/login' />} />
         </Routes>
       </ChatContextProvider>

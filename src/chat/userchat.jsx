@@ -8,18 +8,11 @@ import { url } from '../servirce';
 import moment from 'moment';
 
 function UserChat({ chat, user }) {
-    const { onlineUser, notifications, markthisNotificationRead, markthisread } = useContext(ChatContext)
+    const { onlineUser, markthisread } = useContext(ChatContext)
     const { recipinetUser } = useFetchRecipinet(chat, user)
 
     const { lastestMessage } = useFetchLastMessage(chat)
-    const unreadNotificationsFunc = (notifie) => {
-        if (!notifie) return
-        return notifie?.filter((n) => n?.isRead === false)
-    }
-    const unreadNotifications = unreadNotificationsFunc(notifications);
-    const thisUserNoifications = unreadNotifications?.filter(
-        n => n.senderId == recipinetUser?._id
-    )
+
 
     return (
         <>

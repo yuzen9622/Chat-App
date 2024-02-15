@@ -12,7 +12,7 @@ function Navbar() {
     const { user, logoutUser } = useContext(AuthContext)
     const { allUsers } = useContext(ChatContext)
     const User = allUsers?.find(id => id._id === user.id)
-    console.log(User)
+
     return (
         <div className="nav">
             <nav>

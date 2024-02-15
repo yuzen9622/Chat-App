@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { io, emit, on } from "socket.io-client";
 import { url } from "../servirce";
+
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children, user }) => {
@@ -85,7 +86,7 @@ export const ChatContextProvider = ({ children, user }) => {
         };
     }, [socket, newMessage, currentChat]);
 
-    console.log(messages)
+
     useEffect(() => {
         if (user) {
             const getUser = async () => {
@@ -165,8 +166,8 @@ export const ChatContextProvider = ({ children, user }) => {
 
 
     const updateCurrentChat = useCallback((chat) => {
-
-        if (chat?.members[0] == currentChat?.members[0] || chat?.members[1] == currentChat?.members[1]) return;
+        const recipientId = currentChat?.members.find((id) => id !== user?.id);
+        if (chat?.members[0] == recipientId || chat?.members[1] == recipientId) return;
         setLoadingUser(true)
         setCurrentChat(chat)
 

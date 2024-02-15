@@ -14,7 +14,7 @@ function Chat() {
             navgitave('/login')
         }
     }, [user])
-    console.log(user)
+
     return (
         <>
             <div className='chat'>
