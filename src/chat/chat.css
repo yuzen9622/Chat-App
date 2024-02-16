@@ -148,7 +148,7 @@
 .chat-list img {
     width: 56px;
     aspect-ratio: 1 / 1;
-
+    border: 0.1rem solid hsl(0, 0%, 95%);
     border-radius: 50px;
 
 }
