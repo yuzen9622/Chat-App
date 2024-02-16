@@ -58,13 +58,8 @@ function UserChat({ chat, user }) {
 
                         <div className='user-recip glimmer-line'>
 
-                            <h3></h3>
-
-                            <div className="user-text glimmer-line">
-
-                            </div>
-
-
+                            <div className="user-text glimmer-line"></div>
+                            <div className="user-text glimmer-line" style={{ marginTop: "5px" }}></div>
                         </div>
                     </div>
 

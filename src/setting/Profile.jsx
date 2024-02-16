@@ -5,13 +5,11 @@ import avarter from "../img/user.png"
 import { Link } from 'react-router-dom';
 
 function Profile() {
-    const { user, updateAvatar } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const [loading, setLoading] = useState(false)
 
 
-    const updateProfile = () => {
 
-    }
 
     const spliceEmail = (email) => {
         const mailId = email.split("@");
@@ -19,7 +17,7 @@ function Profile() {
         return id
     }
     function copy() {
-        const Id = document.getElementById("name")
+        const Id = document.getElementById("Id")
         const IdBtn = document.getElementById('copy-btn');
         IdBtn.title = "Copied"
         navigator.clipboard.writeText(Id.innerText)
@@ -33,13 +31,13 @@ function Profile() {
 
                 <div className="profile-user">
                     <div className='profile-alt'>
-                        <h1 className='name' id='name'>{user?.name}</h1><button id='copy-btn' title='Copied' onClick={copy}><i class="fa-solid fa-copy"></i></button>
+                        <h1 className='name' id='name'>{user?.name}</h1>
                     </div>
                     <div className='profile-alt'>
                         <h2 className='mail' id='mail'>{user?.email}</h2>
                     </div>
                     <div className="profile-alt">
-                        <pre >Id:<span id='Id'>{spliceEmail(user?.email)}</span></pre>
+                        <pre >Id:<span id='Id'>{spliceEmail(user?.email)}</span><button id='copy-btn' title='Copied' onClick={copy}><i class="fa-solid fa-copy"></i></button></pre>
                     </div>
 
                     <p><span readOnly style={{

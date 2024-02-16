@@ -16,7 +16,7 @@ function ChatBoard() {
     const { recipinetUser } = useFetchRecipinet(currentChat, user)
     const scroll = useRef();
     const { lastestMessage } = useFetchLastMessage(currentChat)
-    const mobile = isMobile()
+
     useEffect(() => {
 
         scroll.current?.scrollIntoView({ behavior: "smooth" })

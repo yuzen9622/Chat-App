@@ -74,6 +74,9 @@
 
 .edit-img {
     width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-right: 10px;
     max-width: 100px;
     min-width: 80px;
