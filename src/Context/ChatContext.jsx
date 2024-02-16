@@ -269,7 +269,11 @@ export const ChatContextProvider = ({ children, user }) => {
                 console.error(err);
             })
     }, [])
-
+    const isMobile = useCallback(() => {
+        const isMobile = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'IEMobile', 'Opera Mini'].some(keyword => navigator.userAgent.includes(keyword));
+        return isMobile
+    }, [])
+    console.log(isMobile())
     return <ChatContext.Provider value={{
         userChats,
         potentialChats,
@@ -287,6 +291,7 @@ export const ChatContextProvider = ({ children, user }) => {
         searchUser,
         markthisread,
         lodingChat,
-        loadingUser
+        loadingUser,
+        isMobile
     }}>{children}</ChatContext.Provider>
 }

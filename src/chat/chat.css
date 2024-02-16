@@ -269,16 +269,23 @@
     color: rgb(0, 149, 246);
 }
 
+.text-input {
+    border: 1px solid #aaa;
+
+}
+
 .chat-input input {
     width: 100%;
     border-radius: 25px;
-    padding: 5px;
+    font-size: 16px;
+    margin-right: 5px;
 
 }
 
 .chat-input button {
     border: none;
     background-color: transparent;
+
 
 }
 

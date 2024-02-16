@@ -8,6 +8,7 @@ import './chat.css';
 import './RWD.css'
 function Chat() {
     const { user } = useContext(AuthContext);
+
     const navgitave = useNavigate()
     useEffect(() => {
         if (user === null) {

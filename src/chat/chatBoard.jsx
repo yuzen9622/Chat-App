@@ -10,13 +10,13 @@ import { url } from '../servirce';
 import avarter from "../img/user.png"
 
 function ChatBoard() {
-    const { currentChat, loadingUser, messages, sendMessage, onlineUser } = useContext(ChatContext);
+    const { currentChat, loadingUser, messages, sendMessage, onlineUser, isMobile } = useContext(ChatContext);
     const { user } = useContext(AuthContext)
     const [textmessage, setTextmessage] = useState("")
     const { recipinetUser } = useFetchRecipinet(currentChat, user)
     const scroll = useRef();
     const { lastestMessage } = useFetchLastMessage(currentChat)
-
+    const mobile = isMobile()
     useEffect(() => {
 
         scroll.current?.scrollIntoView({ behavior: "smooth" })
@@ -55,8 +55,9 @@ function ChatBoard() {
                     </div>
 
                     <div className="chat-input">
+                        {isMobile() ? <input type='text' className='react-input-emoji--input text-input' placeholder='Messages...' value={textmessage} onInput={(e) => setTextmessage(e.target.value)} /> : <InputEmoji keepOpened onChange={setTextmessage} value={textmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />}
 
-                        <InputEmoji keepOpened onChange={setTextmessage} value={textmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />
+
                         {textmessage &&
                             <button className={textmessage == "" ? "btn" : "btn istext"} type='button' onClick={() => { sendMessage(textmessage, user, currentChat._id, false, sendMessage); setTextmessage("") }}><i class="fa-solid fa-paper-plane"></i></button>
                         }
