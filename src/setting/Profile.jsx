@@ -42,9 +42,11 @@ function Profile() {
                         <pre >Id:<span id='Id'>{spliceEmail(user?.email)}</span></pre>
                     </div>
 
-                    <p>個人簡介:<span id='introduction'></span></p>
+                    <p><span readOnly style={{
+                        border: "none", resize: 'none', outline: "none", display: "flex", whiteSpace: "pre-wrap", width: "230px"
+                    }} id='introduction'>{user.bio ? user.bio : ""}</span></p>
 
-                    <Link to={'/Edit'} >更改個人資料</Link>
+                    <Link to={'/Edit'}>更改個人資料</Link>
                 </div>
             </> : <div className='loader-chat'></div>}
         </div>

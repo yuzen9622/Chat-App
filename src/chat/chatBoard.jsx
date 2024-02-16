@@ -56,7 +56,7 @@ function ChatBoard() {
 
                     <div className="chat-input">
 
-                        <InputEmoji keepOpened onChange={setTextmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />
+                        <InputEmoji keepOpened onChange={setTextmessage} value={textmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />
                         {textmessage &&
                             <button className={textmessage == "" ? "btn" : "btn istext"} type='button' onClick={() => { sendMessage(textmessage, user, currentChat._id, false, sendMessage); setTextmessage("") }}><i class="fa-solid fa-paper-plane"></i></button>
                         }

@@ -30,7 +30,7 @@ function Login() {
                 console.log(data)
                 if (data.name) {
 
-                    datas = { id: data._id, name: data.name, Avatar: data.Avatar, email: data.email }
+                    datas = { id: data._id, name: data.name, Avatar: data.Avatar, email: data.email, bio: data.bio }
                     sessionStorage.setItem("User", JSON.stringify(datas))
                     window.location.reload()
                     setlogin(false)
