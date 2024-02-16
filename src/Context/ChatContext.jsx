@@ -210,9 +210,17 @@ export const ChatContextProvider = ({ children, user }) => {
                 console.error(err);
             })
     }, [])
-    const delChat = useCallback((userId, secondId) => {
+    const delChat = useCallback(async (userId, secondId) => {
+        try {
+            const response = await fetch(`${url}/chat/delete/${userId}/${secondId}`)
+            const data = await response.json()
+            setUserChat(data)
+        } catch (error) {
 
-    })
+        }
+
+
+    }, [])
 
     const markthisNotificationRead = useCallback((thisNoifications, notifications) => {
         const mNotitfication = notifications.map(el => {
@@ -292,6 +300,7 @@ export const ChatContextProvider = ({ children, user }) => {
         markthisread,
         lodingChat,
         loadingUser,
-        isMobile
+        isMobile,
+        delChat
     }}>{children}</ChatContext.Provider>
 }

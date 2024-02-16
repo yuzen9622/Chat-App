@@ -4,7 +4,7 @@ import { ChatContext } from '../Context/ChatContext'
 import avarter from "../img/user.png"
 import { url } from '../servirce'
 function Search() {
-    const { search, searchUser, createChat, potentialChats, userChats } = useContext(ChatContext)
+    const { search, searchUser, createChat, potentialChats, userChats, delChat } = useContext(ChatContext)
     const { user } = useContext(AuthContext)
     const [searchName, setSearchName] = useState("");
 
@@ -36,7 +36,7 @@ function Search() {
 
                             {potentialChats?.some((user) => user._id == u?._id) ?
                                 <button onClick={() => createChat(user.id, u._id)}>Follow</button>
-                                : <button >Unfollow</button>}
+                                : <button onClick={() => delChat(user.id, u._id)} >Unfollow</button>}
 
                         </div>
                     ))}
