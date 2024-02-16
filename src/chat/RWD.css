@@ -44,13 +44,13 @@
     }
 }
 
-@media screen and (max-width:600) {
+@media screen and (max-width:px) {
     .chat-input input {
         width: 85%;
     }
 }
 
-@media screen and (max-width:425) {
+@media screen and (max-width:425px) {
     .chat-input input {
         width: 75%;
     }
