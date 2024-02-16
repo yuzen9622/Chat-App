@@ -63,7 +63,7 @@ export const AuthContextProvider = ({ children }) => {
             const datas = { id: data._id, name: data.name, Avatar: data.Avatar, email: data.email, bio: data.bio }
             console.log(datas)
             sessionStorage.setItem("User", JSON.stringify(datas))
-            window.location.reload()
+            navgate('/Profile')
         } catch (error) {
 
         }

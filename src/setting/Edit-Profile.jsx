@@ -2,10 +2,11 @@ import React, { useContext, useState } from 'react'
 import { AuthContext } from '../Context/AuthContext'
 import { url } from '../servirce'
 import avarter from "../img/user.png"
-
+import { useNavigate } from 'react-router-dom'
 export default function EditProfile() {
     const { user, updateAvatar, updateUser } = useContext(AuthContext)
-    if (!user) window.location.replace('/')
+    const navgative = useNavigate()
+    if (!user) navgative('/')
     const [editUser, setEditUser] = useState({
         name: user.name,
         email: user.email,
