@@ -51,7 +51,7 @@ export const AuthContextProvider = ({ children }) => {
         console.log("click")
         try {
             if (!id || !name || !email) return
-            const response = await fetch(`http://localhost:5000/users/update`, {
+            const response = await fetch(`${url}/users/update`, {
                 method: "POST", body: JSON.stringify({
                     userId: id,
                     name: name,
