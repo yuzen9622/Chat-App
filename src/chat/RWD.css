@@ -46,12 +46,12 @@
 
 @media screen and (max-width:600) {
     .chat-input input {
-        width: 85% !important;
+        width: 85%;
     }
 }
 
 @media screen and (max-width:425) {
     .chat-input input {
-        width: 75% !important;
+        width: 75%;
     }
 }
