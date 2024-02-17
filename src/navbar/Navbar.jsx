@@ -1,13 +1,13 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import './navbar.css'
 import { AuthContext } from '../Context/AuthContext';
 import Search from '../chat/search';
 import avarter from "../img/user.png"
 import { url } from '../servirce';
-
+import Icon from '../img/icon.png'
 import { ChatContext } from '../Context/ChatContext';
-
+import chat from '../img/chat.png'
 function Navbar() {
     const { user, logoutUser } = useContext(AuthContext)
     const { allUsers } = useContext(ChatContext)
@@ -18,13 +18,14 @@ function Navbar() {
             <nav>
                 <ul>
                     <div className="log">
-                        <li><h1>Chatta</h1> </li>
+                        <li><img src={chat} alt="" width={"40px"} /></li>
+                        <li><img src={Icon} alt="" width={"120px"} /></li>
                         {user ? <li><Search /></li> : ""}
 
                     </div>
 
-                    {user ? <div className='nav-user'><Link to={'/chat'}><i class="fa-regular fa-comment-dots"></i><p>Chat</p></Link>
-                        <Link to={'/Profile'}><span>   {User ? <img src={user?.Avatar ? `${url}/users/avatar/${user?.id}` : avarter} /> : <div className='img-glimmer-line'></div>}  </span><p>Profile</p></Link>
+                    {user ? <div className='nav-user'><NavLink to={'/chat'}><i class="fa-regular fa-comment-dots"></i><p>Chat</p></NavLink>
+                        <NavLink to={'/Profile'}><span>   {User ? <img src={user?.Avatar ? `${url}/users/avatar/${user?.id}` : avarter} /> : <div className='img-glimmer-line'></div>}  </span><p>Profile</p></NavLink>
                         <Link to={'/'} onClick={() => logoutUser()}><i class="fa-solid fa-arrow-right-from-bracket"></i><p>Logout</p></Link></div> :
                         <div className='log'>
                             <li><Link to={'/login'}>Login</Link></li>

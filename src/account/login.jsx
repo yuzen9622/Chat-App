@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
+import icon from '../img/icon.png'
 import './acc.css'
+import chat from '../img/chat.png'
 import { url } from "../servirce";
 function Login() {
     const { user } = useContext(AuthContext)
@@ -58,7 +60,8 @@ function Login() {
     return (
         <div className="login">
 
-            <h1>Chatta</h1>
+
+            <img src={chat} alt="" width={"50px"} />
             <h3>Login</h3>
             <form autoFocus onSubmit={(e) => { login(e); setlogin(true); }}>
 
@@ -79,7 +82,7 @@ function Login() {
                 </div>
 
                 <h4>{loginError}</h4>
-                {islogin ? <button disabled >Login...</button> : <button type="submit">Log in</button>}
+                {islogin ? <button disabled >登入中...</button> : <button type="submit">登入</button>}
 
             </form>
         </div>

@@ -10,7 +10,7 @@
 .login form,
 .sign form {
     position: absolute;
-
+    color: hsl(197, 59%, 30%);
     top: 90%;
     display: flex;
     width: 40%;
@@ -30,6 +30,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    min-width: 200px;
 }
 
 label {
@@ -50,10 +51,12 @@ label {
     border: 1px solid #ccc;
     font-size: 16px;
     padding: 10px;
+    color: hsl(197, 59%, 30%);
     width: 90%;
     max-width: 300px;
     margin-top: 10px;
     border-radius: 5px;
+    min-width: 200px;
     transition: border-color 0.3s;
 }
 
@@ -96,11 +99,13 @@ label {
     margin: 10px;
     border-radius: 8px;
     font-weight: 600;
+    min-width: 200px;
     background-color: rgb(0, 149, 246);
 
 }
 
 :is(.sign, .login) h3 {
     font-family: 'Roboto Slab', serif;
+    color: hsl(207, 91%, 56%);
 
 }

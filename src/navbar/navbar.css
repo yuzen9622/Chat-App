@@ -12,6 +12,7 @@ li {
 }
 
 li h1 {
+    color: rgb(34, 151, 244);
     font-size: 30px;
     font-family: 'Montserrat Alternates', sans-serif;
 }
@@ -23,10 +24,10 @@ li h1 {
 
 .nav a {
     border: none;
-    background-color: transparent;
+
     text-decoration: none;
     padding: 5px;
-    color: black;
+    color: hsl(207, 91%, 75%);
     display: flex;
     align-items: center;
     margin: 0 5px;
@@ -35,12 +36,16 @@ li h1 {
     font-weight: 600;
 }
 
+.active {
+    background-color: rgb(239, 239, 239);
+}
+
 .nav a:hover {
 
     background-color: rgb(239, 239, 239);
 }
 
-.nav img {
+.nav-user img {
     width: 40px;
     aspect-ratio: 1 / 1;
     border-radius: 50px;

@@ -42,6 +42,14 @@
         width: 90%;
 
     }
+
+    .user {
+        display: none !important;
+    }
+
+    .search a {
+        display: flex !important;
+    }
 }
 
 @media screen and (max-width:px) {

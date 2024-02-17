@@ -17,7 +17,8 @@ export const ChatContextProvider = ({ children, user }) => {
     const [searchUser, setSearchUser] = useState(null)
     const [lodingChat, setLodingChat] = useState(true)
     const [loadingUser, setLoadingUser] = useState(true)
-
+    const [UserProfile, setUserProfile] = useState(null)
+    const [userprofileChat, setUserProfileChat] = useState(null)
     useEffect(() => {
         const newSocket = io("https://chat-socket-97vj.onrender.com");
         setsocket(newSocket)
@@ -210,11 +211,13 @@ export const ChatContextProvider = ({ children, user }) => {
                 console.error(err);
             })
     }, [])
+
     const delChat = useCallback(async (userId, secondId) => {
         try {
             const response = await fetch(`${url}/chat/delete/${userId}/${secondId}`)
             const data = await response.json()
             setUserChat(data)
+            setCurrentChat(null)
         } catch (error) {
 
         }
@@ -277,11 +280,29 @@ export const ChatContextProvider = ({ children, user }) => {
                 console.error(err);
             })
     }, [])
+
+    const getUserProfile = useCallback(async (userId, secondId) => {
+        if (!userId) return
+
+        try {
+            if (secondId) {
+                const chatres = await fetch(`${url}/chat/find/${userId}/${secondId}`)
+                const chatData = await chatres.json();
+                setUserProfileChat(chatData[0])
+            }
+            const response = await fetch(`${url}/users/find/${userId}`)
+            const data = await response.json()
+            setUserProfile(data)
+
+        } catch (error) {
+
+        }
+    }, [])
     const isMobile = useCallback(() => {
         const isMobile = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'IEMobile', 'Opera Mini'].some(keyword => navigator.userAgent.includes(keyword));
         return isMobile
     }, [])
-    console.log(isMobile())
+
     return <ChatContext.Provider value={{
         userChats,
         potentialChats,
@@ -301,6 +322,9 @@ export const ChatContextProvider = ({ children, user }) => {
         lodingChat,
         loadingUser,
         isMobile,
-        delChat
+        delChat,
+        getUserProfile,
+        UserProfile,
+        userprofileChat
     }}>{children}</ChatContext.Provider>
 }

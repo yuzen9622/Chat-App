@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useContext } from 'react'
 import { AuthContext } from '../Context/AuthContext'
 import { url } from '../servirce';
-
+import chat from '../img/chat.png'
 function Sign() {
     const { signInfo, updateSignInfo } = useContext(AuthContext);
     const [signStatus, setSignStatus] = useState("")
@@ -29,7 +29,7 @@ function Sign() {
 
     return (
         <div className="sign">
-            <h1>Chatta</h1>
+            <img src={chat} alt="" width={"50px"} />
             <h3>Register</h3>
             <form onSubmit={sign}>
                 <div className="user">

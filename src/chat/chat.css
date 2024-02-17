@@ -60,6 +60,7 @@
     width: 50%;
     max-width: 300px;
     min-width: 250px;
+    overflow-y: auto;
 }
 
 .list {
@@ -252,7 +253,9 @@
 }
 
 .chat-main {
+    border-radius: 0.5rem;
     width: 100%;
+    background-color: #f2fbfd;
     height: 100%;
     border-top: 1px solid rgb(239, 239, 239);
     padding: 5px;
@@ -261,6 +264,7 @@
 
 .chat-input {
     width: 100%;
+    padding-top: 5px;
     display: flex;
     align-items: center;
 }
@@ -319,12 +323,13 @@
 .chat-title img {
     width: 44px;
     border-radius: 50px;
+    border: 0.1rem solid hsl(0, 0%, 95%);
 }
 
 .other-message {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+
+    align-items: flex-end;
     margin: 5px 0;
 
 }
@@ -446,7 +451,12 @@ form {
     justify-content: space-around;
     align-items: center;
     padding: 5px;
-    max-width: 300px;
+    max-width: 230px;
+    border-radius: 0.5rem;
+}
+
+.search-data:hover {
+    background-color: rgb(239, 239, 239);
 }
 
 .search-profile {
@@ -464,6 +474,11 @@ form {
     width: 20%;
 
     border-radius: 50px;
+}
+
+.search i {
+    font-size: 25px;
+    padding: 5px;
 }
 
 
@@ -540,7 +555,7 @@ form {
 }
 
 .glimmer-panel {
-    width: 100%;
+    width: 80%;
     border: 1px dashed #aaa;
     background: linear-gradient(90deg, rgba(221, 221, 221, 1) 0%, rgba(255, 255, 255, 1) 100%);
     border-radius: 6px;
