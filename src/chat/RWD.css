@@ -43,12 +43,18 @@
 
     }
 
-    #search {
-        display: none !important;
+    .search-box {
+        display: none;
     }
 
     .search a {
-        display: flex !important;
+        display: flex;
+    }
+}
+
+@media screen and (min-width:767px) {
+    .nav .search-btn {
+        display: none;
     }
 }
 
@@ -58,8 +64,12 @@
     }
 }
 
-@media screen and (max-width:425px) {
+@media screen and (max-width:600px) {
     .chat-input input {
         width: 75%;
+    }
+
+    #chatta-icon {
+        display: none;
     }
 }

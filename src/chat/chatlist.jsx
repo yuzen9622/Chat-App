@@ -5,7 +5,7 @@ import UserChat from './userchat'
 
 
 function Chatlist() {
-    const { userChats, updateCurrentChat, lodingChat } = useContext(ChatContext)
+    const { userChats, updateCurrentChat, lodingChat, currentChat, isMobile } = useContext(ChatContext)
     const { user } = useContext(AuthContext)
 
 
@@ -28,15 +28,36 @@ function Chatlist() {
 
 
     return (
-        <>
+        <>{isMobile() ? <>
+            {currentChat ? "" : <>
+                <div className='chat-list' style={isMobile() ? { width: "100%" } : ""}>
 
-            <div className='chat-list'>
+                    <div className="add">
+                        <h3>message</h3>
+
+                    </div>
+
+                    {!lodingChat ?
+                        userChats?.map((chat, index) => (
+
+                            <div className="userchat-list" key={index} onClick={() => { updateCurrentChat(chat); active(index) }}>
+
+                                <UserChat user={user} chat={chat} key={index} />
+
+                            </div>
+
+                        ))
+                        : <div className='load-div'><div className='loader'></div></div>}
+
+                </div >
+            </>
+            }</>
+            : <div className='chat-list'>
 
                 <div className="add">
                     <h3>message</h3>
 
                 </div>
-
 
                 {!lodingChat ?
                     userChats?.map((chat, index) => (
@@ -50,8 +71,7 @@ function Chatlist() {
                     ))
                     : <div className='load-div'><div className='loader'></div></div>}
 
-            </div >
-
+            </div >}
         </>
     )
 }

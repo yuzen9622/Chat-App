@@ -8,7 +8,7 @@ import { url } from '../servirce';
 import moment from 'moment';
 
 function UserChat({ chat, user }) {
-    const { onlineUser, markthisread } = useContext(ChatContext)
+    const { onlineUser, markthisread, markthisNotificationRead, isMobile } = useContext(ChatContext)
     const { recipinetUser } = useFetchRecipinet(chat, user)
 
     const { lastestMessage } = useFetchLastMessage(chat)
@@ -18,23 +18,25 @@ function UserChat({ chat, user }) {
         <>
             {recipinetUser ?
                 <button type='button' className='tab' onClick={() => { markthisread(lastestMessage?.chatId, lastestMessage?.senderId) }}>
-                    <div className="userlist">
+                    <div className="userlist" style={isMobile() ? { justifyContent: "space-between" } : {}}>
                         <div className="list">
-                            <div className="img-online">
+                            <div className="img-online" style={isMobile() ? { marginRight: "20px" } : {}}>
 
                                 <img src={recipinetUser?.Avatar ? `${url}/users/avatar/${recipinetUser?._id}` : avarter} alt="img" />
                                 <div className={onlineUser?.some((user) => user.userId === recipinetUser?._id) ? "online" : ""}></div>
                             </div>
 
 
-                            <div className='user-recip'>
+                            <div className='user-recip' style={isMobile() ? { display: "flex" } : {}} >
 
                                 <h3>{recipinetUser?.name}</h3>
                                 {lastestMessage !== undefined ?
-                                    <div className="user-text">
-                                        {<> <p className='txt'>{lastestMessage?.senderId == user?.id ? `You:${lastestMessage?.text}` : `${lastestMessage?.text}`}</p><p className="text-time">·</p><p className='text-time'>{moment(lastestMessage?.createdAt).fromNow()}</p></>}
+                                    <div className="user-text" style={isMobile() ? { alignItems: "center" } : {}}>
+                                        {<> <p className='txt' style={lastestMessage?.senderId == user?.id || lastestMessage?.isRead ? { fontWeight: "400" } : { fontWeight: "600" }}  >{lastestMessage?.senderId == user?.id ? `You:${lastestMessage?.text}` : `${lastestMessage?.text}`}</p><p className="text-time">·</p><p className='text-time'>{moment(lastestMessage?.createdAt).fromNow()}</p></>}
                                     </div>
-                                    : ""}
+                                    : <div className="user-text" style={isMobile() ? { alignItems: "center" } : {}}>
+                                        <p className="txt" style={isMobile() ? { color: "hsl(207, 91%, 55%)", fontWeight: "600" } : {}}>快來發送訊息</p>
+                                    </div>}
 
                             </div>
                         </div>

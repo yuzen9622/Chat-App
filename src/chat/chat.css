@@ -305,6 +305,7 @@
     font-family: 'Nunito Sans', sans-serif;
     padding: 5px;
     width: 100%;
+    align-items: center;
 
 }
 
@@ -318,6 +319,12 @@
 
     font-size: 22px;
     margin-left: 5px;
+}
+
+.mobile-arrow i {
+    color: hsl(207, 91%, 75%);
+    font-size: 20px;
+    padding: 5px;
 }
 
 .chat-title img {

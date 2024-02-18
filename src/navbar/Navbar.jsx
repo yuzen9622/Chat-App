@@ -18,8 +18,8 @@ function Navbar() {
             <nav>
                 <ul>
                     <div className="log">
-                        <li><img src={chat} alt="" width={"40px"} /></li>
-                        <li><img src={Icon} alt="" width={"120px"} /></li>
+                        <li><img id='chat-icon' src={chat} alt="" width={"40px"} /></li>
+                        <li><img id='chatta-icon' src={Icon} alt="" width={"120px"} /></li>
                         {user ? <li><Search /></li> : ""}
 
                     </div>

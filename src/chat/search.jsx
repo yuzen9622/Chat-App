@@ -18,15 +18,23 @@ function Search() {
         const id = "@" + mailId[0];
         return id
     }
+    const searchbtn = () => {
+        const searchBtn = document.getElementsByClassName('search-btn')[0]
+        const seaechBox = document.getElementsByClassName('search-box')[0]
+        const NavUser = document.getElementsByClassName('nav-user')[0]
+        seaechBox.style.display = 'flex'
+        NavUser.style.display = 'none'
+        searchBtn.style.display = 'none'
+    }
     return (
         <div className="search">
 
-            <div className="user">
+            <div className="search-box">
                 <input type="search" autocomplete="off" id='search' placeholder='' value={searchName} onChange={(e) => setSearchName(e.target.value)} />
                 <label id='search' htmlFor="search" >#Search</label>
 
             </div>
-            <a style={{ display: "none" }}><i class="fa-solid fa-magnifying-glass"></i></a>
+            <a onClick={searchbtn} className='search-btn' ><i class="fa-solid fa-magnifying-glass"></i></a>
             {searchUser?.length > 0 ?
 
                 <div className="search-user">
