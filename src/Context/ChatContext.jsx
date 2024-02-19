@@ -19,7 +19,9 @@ export const ChatContextProvider = ({ children, user }) => {
     const [loadingUser, setLoadingUser] = useState(true)
     const [UserProfile, setUserProfile] = useState(null)
     const [userprofileChat, setUserProfileChat] = useState(null)
+    const [SendLoading, setSendLoading] = useState(false)
     useEffect(() => {
+
         const newSocket = io("https://chat-socket-97vj.onrender.com");
         setsocket(newSocket)
 
@@ -84,6 +86,7 @@ export const ChatContextProvider = ({ children, user }) => {
         return () => {
             socket.off("getMessage");
             socket.off("getNotification")
+
         };
     }, [socket, newMessage, currentChat]);
 
@@ -170,6 +173,7 @@ export const ChatContextProvider = ({ children, user }) => {
         const recipientId = currentChat?.members.find((id) => id !== user?.id);
         if (chat?.members[0] == recipientId || chat?.members[1] == recipientId) return;
         setLoadingUser(true)
+        setNewMessage(null)
         setCurrentChat(chat)
 
     })
@@ -178,6 +182,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
         if (!textmessage) return null
         try {
+            setSendLoading(true)
             const response = await fetch(`${url}/msg`,
                 {
                     method: "POST",
@@ -191,6 +196,7 @@ export const ChatContextProvider = ({ children, user }) => {
             const data = await response.json()
             setNewMessage(data)
             setMessages((prev) => [...prev, data])
+            setSendLoading(false)
         } catch (err) {
 
         }
@@ -302,6 +308,20 @@ export const ChatContextProvider = ({ children, user }) => {
         const isMobile = ['Android', 'webOS', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'IEMobile', 'Opera Mini'].some(keyword => navigator.userAgent.includes(keyword));
         return isMobile
     }, [])
+    const displayNotification = () => {
+        if ('serviceWorker' in navigator) {
+            var options = {
+                body: '歡迎進入30天PWA的世界'
+            };
+            navigator.serviceWorker.ready
+                .then(function (sw) {
+                    sw.showNotification('訂閱成功！！！', options);
+                })
+        }
+    }
+    useEffect(() => {
+
+    }, [user])
 
     return <ChatContext.Provider value={{
         userChats,
@@ -325,6 +345,7 @@ export const ChatContextProvider = ({ children, user }) => {
         delChat,
         getUserProfile,
         UserProfile,
-        userprofileChat
+        userprofileChat,
+        SendLoading
     }}>{children}</ChatContext.Provider>
 }

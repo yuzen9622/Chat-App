@@ -418,6 +418,7 @@ form {
 
 /*search*/
 .search {
+    position: relative;
     font-family: 'Roboto Slab', serif;
     ;
     display: flex;
@@ -426,10 +427,36 @@ form {
     background-color: white;
     border-radius: 15px;
 
+
+
+
 }
 
-.search .user input {
-    border-radius: 15px;
+.search-box {
+    position: absolute;
+    left: 0;
+    right: auto;
+    bottom: -30px;
+    top: auto;
+    transition: all 0.5s;
+    animation: outsmooth 0.5s;
+    width: 230px;
+}
+
+.search-box input {
+    border-radius: 5px;
+
+}
+
+
+@keyframes outsmooth {
+    0% {
+        width: 10px;
+    }
+
+    100% {
+        width: 230px;
+    }
 }
 
 .search-user {

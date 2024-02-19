@@ -30,7 +30,7 @@ function Chatlist() {
     return (
         <>{isMobile() ? <>
             {currentChat ? "" : <>
-                <div className='chat-list' style={isMobile() ? { width: "100%" } : ""}>
+                <div className='chat-list' style={isMobile() ? { width: "100%", maxWidth: "none" } : ""}>
 
                     <div className="add">
                         <h3>message</h3>
@@ -40,7 +40,7 @@ function Chatlist() {
                     {!lodingChat ?
                         userChats?.map((chat, index) => (
 
-                            <div className="userchat-list" key={index} onClick={() => { updateCurrentChat(chat); active(index) }}>
+                            <div className="userchat-list" key={index} onClick={() => { updateCurrentChat(chat); !isMobile() && active(index) }}>
 
                                 <UserChat user={user} chat={chat} key={index} />
 

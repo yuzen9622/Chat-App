@@ -20,8 +20,7 @@
 }
 
 .login .user,
-.sign .user,
-.search-box {
+.sign .user {
     position: relative;
     width: 80%;
     padding: 5px;
@@ -31,6 +30,18 @@
     justify-content: center;
     align-items: center;
     min-width: 200px;
+}
+
+.search-box {
+    position: relative;
+    width: 80%;
+    padding: 5px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
 }
 
 label {
@@ -45,8 +56,7 @@ label {
     transition: top 0.3s, font-size 0.3s;
 }
 
-.user input,
-.search input {
+.user input {
     position: relative;
     border: 1px solid #ccc;
     font-size: 16px;
@@ -57,6 +67,20 @@ label {
     margin-top: 10px;
     border-radius: 5px;
     min-width: 200px;
+    transition: border-color 0.3s;
+}
+
+.search input {
+    position: relative;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    padding: 10px;
+    color: hsl(197, 59%, 30%);
+    width: 90%;
+    max-width: 300px;
+    margin-top: 10px;
+    border-radius: 5px;
+
     transition: border-color 0.3s;
 }
 

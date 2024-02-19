@@ -32,10 +32,10 @@ function UserChat({ chat, user }) {
                                 <h3>{recipinetUser?.name}</h3>
                                 {lastestMessage !== undefined ?
                                     <div className="user-text" style={isMobile() ? { alignItems: "center" } : {}}>
-                                        {<> <p className='txt' style={lastestMessage?.senderId == user?.id || lastestMessage?.isRead ? { fontWeight: "400" } : { fontWeight: "600" }}  >{lastestMessage?.senderId == user?.id ? `You:${lastestMessage?.text}` : `${lastestMessage?.text}`}</p><p className="text-time">·</p><p className='text-time'>{moment(lastestMessage?.createdAt).fromNow()}</p></>}
+                                        {<> <p className='txt' style={lastestMessage?.senderId == user?.id || lastestMessage?.isRead ? { fontWeight: "400" } : { fontWeight: "600" }}   >{lastestMessage?.senderId == user?.id ? `你:${lastestMessage?.text}` : `${lastestMessage?.text}`}</p><p className="text-time" style={{ fontWeight: "400", fontSize: "20px" }}>·</p><p className='text-time'>{moment(lastestMessage?.createdAt).fromNow()}</p></>}
                                     </div>
                                     : <div className="user-text" style={isMobile() ? { alignItems: "center" } : {}}>
-                                        <p className="txt" style={isMobile() ? { color: "hsl(207, 91%, 55%)", fontWeight: "600" } : {}}>快來發送訊息</p>
+                                        <p className="txt" style={{ color: "hsl(207, 91%, 55%)", fontWeight: "600" }}>快來發送訊息</p>
                                     </div>}
 
                             </div>

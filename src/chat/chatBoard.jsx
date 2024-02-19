@@ -10,7 +10,7 @@ import { url } from '../servirce';
 import avarter from "../img/user.png"
 import { useNavigate } from 'react-router-dom';
 function ChatBoard() {
-    const { currentChat, loadingUser, messages, sendMessage, onlineUser, isMobile, updateCurrentChat } = useContext(ChatContext);
+    const { currentChat, loadingUser, messages, sendMessage, onlineUser, isMobile, updateCurrentChat, SendLoading } = useContext(ChatContext);
     const { user } = useContext(AuthContext)
     const [textmessage, setTextmessage] = useState("")
     const { recipinetUser } = useFetchRecipinet(currentChat, user)
@@ -30,7 +30,7 @@ function ChatBoard() {
     return (
 
         <>{isMobile() ? currentChat ? <>
-            {!recipinetUser ? <p style={{ textAlign: "center", width: "100%" }}>No conversation yet...</p> : <><div className="chat-board">
+            {!recipinetUser ? <div className="chat-board"><div className='loader'></div></div> : <><div className="chat-board" style={{ margin: "0" }}>
                 {!loadingUser ? <>
 
                     <div className="chat-title">
@@ -50,7 +50,7 @@ function ChatBoard() {
                                     <span className='text'>{message.text}</span>
 
                                 </div>
-                                <div className='time'><div className="time">{message?.senderId === user.id && lastestMessage?.isRead ? "已讀" : message?.senderId === user.id && message?.isRead ? "已讀" : ""}</div>{moment(message.createdAt).locale('zh-tw').format('A h:mm')} </div>
+                                <div className='time'><div className="time">{!sendMessage ? message?.senderId === user.id && lastestMessage?.isRead ? "已讀" : message?.senderId === user.id && message?.isRead ? "已讀" : "" : "傳送中"}</div>{moment(message.createdAt).locale('zh-tw').format('A h:mm')} </div>
                             </div>
                         ))}
                     </div>

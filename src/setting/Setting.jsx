@@ -1,11 +1,15 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Profile from './Profile'
 import Follow from './Follow';
 import './setting.css'
 import { AuthContext } from '../Context/AuthContext';
 function Setting() {
     const { user } = useContext(AuthContext)
+
     if (!user) window.location.replace('/')
+    useEffect(() => {
+        document.title = '個人資料'
+    })
     return (
         <div className="sett">
             <Profile />
