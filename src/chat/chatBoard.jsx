@@ -34,7 +34,7 @@ function ChatBoard() {
                 {!loadingUser ? <>
 
                     <div className="chat-title">
-                        {isMobile() ? <div className="mobile-arrow" style={{ cursor: "pointer" }} onClick={() => updateCurrentChat(null)} ><i class="fa-solid fa-arrow-left"></i></div> : ""}
+                        {isMobile() ? <div className="mobile-arrow" style={{ cursor: "pointer", margin: "0 5px 0 0" }} onClick={() => updateCurrentChat(null)} ><i class="fa-solid fa-arrow-left"></i></div> : ""}
                         <div className="chat-img" style={{ cursor: "pointer" }} onClick={() => navigate(`/user/${recipinetUser?._id}`)}   >
                             <img src={recipinetUser?.Avatar ? `${url}/users/avatar/${recipinetUser?._id}` : avarter} alt="" />
                             <div className={onlineUser?.some((user) => user.userId === recipinetUser?._id) ? "online" : ""}></div>
