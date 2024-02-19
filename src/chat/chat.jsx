@@ -17,7 +17,7 @@ function Chat() {
             navgitave('/login')
         }
 
-        document.title = `聊天室`
+        document.title = 'chatta·聊天室'
     }, [user])
 
     return (
