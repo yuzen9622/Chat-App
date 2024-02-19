@@ -50,7 +50,7 @@ function ChatBoard() {
                                     <span className='text'>{message.text}</span>
 
                                 </div>
-                                <div className='time'><div className="time">{!sendMessage ? message?.senderId === user.id && lastestMessage?.isRead ? "已讀" : message?.senderId === user.id && message?.isRead ? "已讀" : "" : "傳送中"}</div>{moment(message.createdAt).locale('zh-tw').format('A h:mm')} </div>
+                                <div className='time'><div className="time">{message?.senderId === user.id && lastestMessage?.isRead ? "已讀" : message?.senderId === user.id && message?.isRead ? "已讀" : ""}</div>{moment(message.createdAt).locale('zh-tw').format('A h:mm')} </div>
                             </div>
                         ))}
                     </div>
