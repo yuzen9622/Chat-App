@@ -9,15 +9,14 @@ import './RWD.css';
 
 function Chat() {
     const { user } = useContext(AuthContext);
-
-
     const navgitave = useNavigate()
     useEffect(() => {
+        document.title = 'chatta • 聊天室'
         if (user === null) {
             navgitave('/login')
         }
 
-        document.title = 'chatta·聊天室'
+
     }, [user])
 
     return (
