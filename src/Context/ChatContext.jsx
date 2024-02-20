@@ -254,7 +254,7 @@ export const ChatContextProvider = ({ children, user }) => {
             try {
                 const response = await fetch(`${url}/msg/read/${chatId}/${senderId}`)
                 const data = await response.json()
-                console.log(data)
+               
                 setMessages(data)
             } catch (error) {
 
@@ -263,7 +263,7 @@ export const ChatContextProvider = ({ children, user }) => {
     }, [])
 
     const search = useCallback((name, userId) => {
-        if (name == "") setSearchUser(null);
+        if (name == "") return setSearchUser(null) ;
         fetch(`${url}/users/findname/${name}`)
             .then((res) => res.json())
             .then((data) => {

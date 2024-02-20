@@ -17,7 +17,7 @@ function UserChat({ chat, user }) {
     return (
         <>
             {recipinetUser ?
-                <button type='button' className='tab' onClick={() => { markthisread(lastestMessage?.chatId, lastestMessage?.senderId) }}>
+                <button type='button' className='tab' style={isMobile()?{backgroundColor:"transparent"}:{}} onClick={() => { markthisread(lastestMessage?.chatId, lastestMessage?.senderId) }}>
                     <div className="userlist" style={isMobile() ? { justifyContent: "space-between" } : {}}>
                         <div className="list">
                             <div className="img-online" style={isMobile() ? { marginRight: "20px" } : {}}>

@@ -40,7 +40,7 @@ function Chatlist() {
                     {!lodingChat ?
                         userChats?.map((chat, index) => (
 
-                            <div className="userchat-list" key={index} onClick={() => { updateCurrentChat(chat); !isMobile() && active(index) }}>
+                            <div className="userchat-list"   key={index} onClick={() => { updateCurrentChat(chat); !isMobile() && active(index) }}>
 
                                 <UserChat user={user} chat={chat} key={index} />
 
