@@ -13,7 +13,7 @@ function ChatBoard() {
     const { currentChat, loadingUser, messages, sendMessage, onlineUser, isMobile, updateCurrentChat, SendLoading } = useContext(ChatContext);
     const { user } = useContext(AuthContext)
     const [textmessage, setTextmessage] = useState("")
-    const { recipinetUser } = useFetchRecipinet(currentChat, user)
+    const { recipinetUser,loading } = useFetchRecipinet(currentChat, user)
     const scroll = useRef();
     const { lastestMessage } = useFetchLastMessage(currentChat)
     const navigate = useNavigate()
@@ -67,7 +67,7 @@ function ChatBoard() {
 
 
         </> : "" : <> {!recipinetUser ? <p style={{ textAlign: "center", width: "100%" }}>No conversation yet...</p> : <><div className="chat-board">
-            {!loadingUser&&messages ? <>
+            {!loadingUser&&messages&&loading ? <>
 
                 <div className="chat-title">
                     {isMobile() ? <div className="mobile-arrow" style={{ cursor: "pointer" }} onClick={() => updateCurrentChat(null)} ><i class="fa-solid fa-arrow-left"></i></div> : ""}
