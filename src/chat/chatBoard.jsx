@@ -67,7 +67,7 @@ function ChatBoard() {
 
 
         </> : "" : <> {!recipinetUser ? <p style={{ textAlign: "center", width: "100%" }}>No conversation yet...</p> : <><div className="chat-board">
-            {!loadingUser ? <>
+            {!loadingUser&&messages ? <>
 
                 <div className="chat-title">
                     {isMobile() ? <div className="mobile-arrow" style={{ cursor: "pointer" }} onClick={() => updateCurrentChat(null)} ><i class="fa-solid fa-arrow-left"></i></div> : ""}
