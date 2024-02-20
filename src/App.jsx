@@ -14,7 +14,9 @@ import UserProfile from './setting/UserProfile';
 function App() {
   const { user } = useContext(AuthContext);
   console.log(user ? 1 : 0)
-
+  window.addEventListener('storage', (e) => {
+    sessionStorage.setItem(e.key, e.oldValue)
+  })
   return (
 
     <div className="App">

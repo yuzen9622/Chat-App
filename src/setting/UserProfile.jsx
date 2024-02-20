@@ -23,6 +23,9 @@ export default function UserProfile() {
 
         getUserProfile(id, user.id)
     }, [id])
+    useEffect(() => {
+        if (UserProfile) document.title = `${UserProfile?.name}(${UserProfile?.email_id}) • chatta`
+    }, [UserProfile])
     if (user.id == UserProfile?._id) navigate('/Profile')
     return (
         <div className="profile">

@@ -13,7 +13,7 @@ function ChatBoard() {
     const { currentChat, loadingUser, messages, sendMessage, onlineUser, isMobile, updateCurrentChat, SendLoading } = useContext(ChatContext);
     const { user } = useContext(AuthContext)
     const [textmessage, setTextmessage] = useState("")
-    const { recipinetUser,loading } = useFetchRecipinet(currentChat, user)
+    const { recipinetUser, loading } = useFetchRecipinet(currentChat, user)
     const scroll = useRef();
     const { lastestMessage } = useFetchLastMessage(currentChat)
     const navigate = useNavigate()
@@ -31,7 +31,7 @@ function ChatBoard() {
 
         <>{isMobile() ? currentChat ? <>
             {!recipinetUser ? <div className="chat-board"><div className='loader'></div></div> : <><div className="chat-board" style={{ margin: "0" }}>
-                {!loadingUser ? <>
+                {!loadingUser && !loading ? <>
 
                     <div className="chat-title">
                         {isMobile() ? <div className="mobile-arrow" style={{ cursor: "pointer", margin: "0 5px 0 0" }} onClick={() => updateCurrentChat(null)} ><i class="fa-solid fa-arrow-left"></i></div> : ""}
@@ -67,7 +67,7 @@ function ChatBoard() {
 
 
         </> : "" : <> {!recipinetUser ? <p style={{ textAlign: "center", width: "100%" }}>No conversation yet...</p> : <><div className="chat-board">
-            {!loadingUser&&messages&&loading ? <>
+            {!loadingUser && !loading ? <>
 
                 <div className="chat-title">
                     {isMobile() ? <div className="mobile-arrow" style={{ cursor: "pointer" }} onClick={() => updateCurrentChat(null)} ><i class="fa-solid fa-arrow-left"></i></div> : ""}

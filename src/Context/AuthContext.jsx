@@ -4,7 +4,7 @@ import { url } from "../servirce";
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("User")))
+    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("User"))?JSON.parse(sessionStorage.getItem("User")):JSON.parse(localStorage.getItem("User")))
     const navgate = useNavigate()
     const [loadingImg, setLoadingImg] = useState(false)
     const [signInfo, setSignInfo] = useState({
@@ -20,6 +20,7 @@ export const AuthContextProvider = ({ children }) => {
     const logoutUser = useCallback(() => {
         navgate('/')
         sessionStorage.removeItem("User");
+        localStorage.removeItem("User")
         window.location.reload()
     })
     const updateAvatar = useCallback(() => {

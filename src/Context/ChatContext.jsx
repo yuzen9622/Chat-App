@@ -174,7 +174,7 @@ export const ChatContextProvider = ({ children, user }) => {
         if (chat?.members[0] == recipientId || chat?.members[1] == recipientId) return;
         setLoadingUser(true)
         setNewMessage(null)
-        setMessages(null);
+        setMessages(null)
         setCurrentChat(chat)
 
     })

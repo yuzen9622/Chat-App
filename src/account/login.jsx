@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
-import icon from '../img/icon.png'
+
 import './acc.css'
 import chat from '../img/chat.png'
 import { url } from "../servirce";
@@ -11,7 +11,7 @@ function Login() {
     const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [pass, setPass] = useState('')
-
+   
     const [islogin, setlogin] = useState(false)
     const [loginError, setLoginError] = useState("")
 
@@ -33,7 +33,9 @@ function Login() {
                 if (data.name) {
 
                     datas = { id: data._id, name: data.name, Avatar: data.Avatar, email: data.email, bio: data.bio }
-                    sessionStorage.setItem("User", JSON.stringify(datas))
+                    const check=document.getElementById('remember')
+                    check.checked? localStorage.setItem("User", JSON.stringify(datas)): sessionStorage.setItem("User", JSON.stringify(datas))
+                   
                     window.location.reload()
 
                 } else {
@@ -57,13 +59,22 @@ function Login() {
         }
 
     }, [user])
+    var rememberCheckbox = document.getElementById('remember');
+
+    if (rememberCheckbox) {
+        var isChecked = rememberCheckbox.checked;
+        // Now you can use isChecked as needed
+        console.log(isChecked)
+    } else {
+        console.error("Element with id 'remember' not found.");
+    }
     return (
         <div className="login">
 
 
             <img src={chat} alt="" width={"50px"} />
             <h3>Login</h3>
-            <form autoFocus onSubmit={(e) => { login(e); setlogin(true); }}>
+            <form onSubmit={(e) => { login(e); setlogin(true); }}>
 
 
                 <div className="user">
@@ -80,7 +91,7 @@ function Login() {
                         onChange={(e) => setPass(e.target.value)} />
                     <label htmlFor="pass">Password</label>
                 </div>
-
+                <div className="remenber" style={{ width: "100%", maxWidth: "200px", color: "rgb(0, 149, 246)", fontSize: "14px", padding: "5px" }}><input style={{ color: "rgb(0, 149, 246)" }} type="checkbox"  id="remember"   /><label htmlFor="remember" style={{ padding: "5px" }}>記得我</label></div>
                 <h4>{loginError}</h4>
                 {islogin ? <button disabled >登入中...</button> : <button type="submit">登入</button>}
 
