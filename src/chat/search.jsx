@@ -10,7 +10,10 @@ function Search() {
     const [searchName, setSearchName] = useState("");
     const navigate = useNavigate()
     useEffect(() => {
-        search(searchName, user?.id)
+        setTimeout(() => {
+            search(searchName, user?.id) 
+        }, 200);
+        
     }, [searchName, userChats])
 
     const spliceEmail = (email) => {
