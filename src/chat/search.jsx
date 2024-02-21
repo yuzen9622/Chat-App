@@ -18,23 +18,42 @@ function Search() {
         const id = "@" + mailId[0];
         return id
     }
-    const searchbtn = () => {
-        const searchBtn = document.getElementsByClassName('search-btn')[0]
-        const seaechBox = document.getElementsByClassName('search-box')[0]
+    const searchbtn = (e) => {
         const NavUser = document.getElementsByClassName('nav-user')[0]
-        seaechBox.style.display = 'flex'
-        NavUser.style.display = 'none'
-        searchBtn.style.display = 'none'
+        const box = document.getElementsByClassName('box')[0]
+        const input = document.getElementsByClassName('input')[0]
+        input.focus()
+        NavUser.style.display = 'none' 
+        box.classList.add('active-input')
+        e.target.focus();
+    }
+    const searchout = () => {
+        setTimeout(()=>{
+            const NavUser = document.getElementsByClassName('nav-user')[0]
+            NavUser.style.display = 'flex' 
+            const box = document.getElementsByClassName('box')[0]
+            box.classList.remove('active-input')
+            setSearchName("")
+        },100)
+       
+        
     }
     return (
         <div className="search">
 
             <div className="search-box">
-                <input type="search" autocomplete="off" id='search' placeholder='' value={searchName} onChange={(e) => setSearchName(e.target.value)} />
+                <input type="search" autocomplete="off" id='search'  placeholder='' value={searchName}  onChange={(e) => setSearchName(e.target.value)} />
                 <label id='search' htmlFor="search" >#Search</label>
 
             </div>
-            <a onClick={searchbtn} className='search-btn' ><i class="fa-solid fa-magnifying-glass"></i></a>
+        
+            <div class="box" onClick={searchbtn} >
+                <form name="search">
+                        <input type="text"  class="input" placeholder='Search...' name="txt" id='search' onBlur={searchout} value={searchName}  onChange={(e) => setSearchName(e.target.value)} />
+                </form>
+    <i class="fas fa-search"></i>
+
+</div>
             {searchUser?.length > 0 ?
 
                 <div className="search-user">

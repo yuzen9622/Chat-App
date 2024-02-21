@@ -70,7 +70,7 @@
     transition: border-color 0.3s;
 }
 
-.search input {
+.search-box input {
     position: relative;
     border: 1px solid #ccc;
     font-size: 16px;
@@ -93,7 +93,7 @@
     color: rgb(237, 73, 86);
 }
 
-:is(.user, .search) input:focus {
+:is(.user, .search-box) input:focus {
     outline: none;
     border-color: #2196F3;
     border-width: 2px;

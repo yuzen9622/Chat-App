@@ -15,6 +15,7 @@ function ChatBoard() {
     const [textmessage, setTextmessage] = useState("")
     const { recipinetUser, loading } = useFetchRecipinet(currentChat, user)
     const scroll = useRef();
+    const inputEmojiRef = useRef(null);
     const { lastestMessage } = useFetchLastMessage(currentChat)
     const navigate = useNavigate()
     useEffect(() => {
@@ -26,7 +27,10 @@ function ChatBoard() {
         const id = "@" + mailId[0];
         return id
     }
-
+const continueFoucs=()=>{
+    const input =document.getElementsByClassName('text-input')[0];
+    input&&input.foucs()
+}
     return (
 
         <>{isMobile() ? currentChat ? <>
@@ -56,11 +60,11 @@ function ChatBoard() {
                     </div>
 
                     <div className="chat-input">
-                        {isMobile() ? <input type='text' className='react-input-emoji--input text-input' placeholder='Messages...' value={textmessage} onInput={(e) => setTextmessage(e.target.value)} /> : <InputEmoji keepOpened onChange={setTextmessage} value={textmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />}
+                        {isMobile() ? <input type='text' className='react-input-emoji--input text-input' placeholder='Messages...'  value={textmessage} onInput={(e) => setTextmessage(e.target.value)} /> : <InputEmoji keepOpened onChange={setTextmessage} value={textmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />}
 
 
                         {textmessage &&
-                            <button className={textmessage == "" ? "btn" : "btn istext"} type='button' onClick={() => { sendMessage(textmessage, user, currentChat._id, false, sendMessage); setTextmessage("") }}><i class="fa-solid fa-paper-plane"></i></button>
+                            <button className={textmessage == "" ? "btn" : "btn istext"} type='button' onClick={(e) => { sendMessage(textmessage, user, currentChat._id, false, sendMessage); setTextmessage("") ; }}><i class="fa-solid fa-paper-plane"></i></button>
                         }
                     </div></> : <div className='loader'></div>}
             </div></>}
@@ -92,11 +96,11 @@ function ChatBoard() {
                 </div>
 
                 <div className="chat-input">
-                    {isMobile() ? <input type='text' className='react-input-emoji--input text-input' placeholder='Messages...' value={textmessage} onInput={(e) => setTextmessage(e.target.value)} /> : <InputEmoji keepOpened onChange={setTextmessage} value={textmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />}
+                    {isMobile() ? <input type='text' className='react-input-emoji--input text-input' placeholder='Messages...' value={textmessage} onInput={(e) => setTextmessage(e.target.value)} /> : <InputEmoji   keepOpened onChange={setTextmessage} value={textmessage} placeholder='Message...' fontFamily='Helvetica, Arial, sans-serif' cleanOnEnter onEnter={() => sendMessage(textmessage, user, currentChat._id, false, sendMessage)} />}
 
 
                     {textmessage &&
-                        <button className={textmessage == "" ? "btn" : "btn istext"} type='button' onClick={() => { sendMessage(textmessage, user, currentChat._id, false, sendMessage); setTextmessage("") }}><i class="fa-solid fa-paper-plane"></i></button>
+                        <button className={textmessage == "" ? "btn" : "btn istext"} type='button' onClick={() => { sendMessage(textmessage, user, currentChat._id, false, sendMessage); setTextmessage("");continueFoucs() }}><i class="fa-solid fa-paper-plane"></i></button>
                     }
                 </div></> : <div className='loader'></div>}
         </div></>}</>}</>
