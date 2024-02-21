@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React, { lazy, useEffect } from 'react'
 import { useFetchLastMessage, useFetchRecipinet } from '../api/api';
 import avarter from "../img/user.png"
 
@@ -10,8 +10,7 @@ import moment from 'moment';
 function UserChat({ chat, user }) {
     const { onlineUser, markthisread, markthisNotificationRead, isMobile } = useContext(ChatContext)
     const { recipinetUser } = useFetchRecipinet(chat, user)
-
-    const { lastestMessage } = useFetchLastMessage(chat)
+    const { lastestMessage,NoReadMessages } = useFetchLastMessage(chat)
 
 
     return (
@@ -32,7 +31,7 @@ function UserChat({ chat, user }) {
                                 <h3>{recipinetUser?.name}</h3>
                                 {lastestMessage !== undefined ?
                                     <div className="user-text" style={isMobile() ? { alignItems: "center" } : {}}>
-                                        {<> <p className='txt' style={lastestMessage?.senderId == user?.id || lastestMessage?.isRead ? { fontWeight: "400" } : { fontWeight: "600" }}   >{lastestMessage?.senderId == user?.id ? `你:${lastestMessage?.text}` : `${lastestMessage?.text}`}</p><p className="text-time" style={{ fontWeight: "400", fontSize: "10px" }}>•</p><p className='text-time'>{moment(lastestMessage?.createdAt).fromNow()}</p></>}
+                                        {<> <p className='txt' style={lastestMessage?.senderId == user?.id || lastestMessage?.isRead ? { fontWeight: "400" } : { fontWeight: "600" }}   >{NoReadMessages?.length>3?`${NoReadMessages?.length}+則訊息`:  lastestMessage?.senderId == user?.id ? `你:${lastestMessage?.text}` : `${lastestMessage?.text}`}</p><p className="text-time" style={{ fontWeight: "400", fontSize: "10px" }}>•</p><p className='text-time'>{moment(lastestMessage?.createdAt).fromNow()}</p></>}
                                     </div>
                                     : <div className="user-text" style={isMobile() ? { alignItems: "center" } : {}}>
                                         <p className="txt" style={{ color: "hsl(207, 91%, 55%)", fontWeight: "600" }}>快來發送訊息</p>

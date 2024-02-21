@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { ChatContext } from "../Context/ChatContext";
 import { url } from "../servirce";
+import { AuthContext } from "../Context/AuthContext";
 
 export const useFetchRecipinet = (chat, user) => {
     const [recipinetUser, setRecipinetUser] = useState(null);
@@ -32,9 +33,10 @@ export const useFetchRecipinet = (chat, user) => {
 
 
 export const useFetchLastMessage = (chat) => {
+    const {user}=useContext(AuthContext)
     const { newMessage, notifications, messages } = useContext(ChatContext);
     const [lastestMessage, setLastestMessage] = useState(null);
-
+    const [NoReadMessages, setNoReadMessage] = useState(null);
     useEffect(() => {
 
         const getMessage = async () => {
@@ -42,7 +44,9 @@ export const useFetchLastMessage = (chat) => {
                 const response = await fetch(`${url}/msg/${chat?._id}`)
                 const data = await response.json()
                 const lastmessage = data[data?.length - 1];
+                const noReadMessage= data?.filter((msg)=>msg?.isRead!==true&&msg?.senderId!==user.id)
                 setLastestMessage(lastmessage)
+                setNoReadMessage(noReadMessage)
             } catch (error) {
 
             }
@@ -51,7 +55,7 @@ export const useFetchLastMessage = (chat) => {
         getMessage()
     }, [newMessage, notifications, messages])
 
-    return { lastestMessage }
+    return { lastestMessage ,NoReadMessages}
 }
 
 
