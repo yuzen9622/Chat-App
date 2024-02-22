@@ -17,6 +17,8 @@ function App() {
   window.addEventListener('storage', (e) => {
     sessionStorage.setItem(e.key, e.oldValue)
   })
+  
+
   return (
 
     <div className="App">

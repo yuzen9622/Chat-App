@@ -19,35 +19,50 @@ export const ChatContextProvider = ({ children, user }) => {
     const [loadingUser, setLoadingUser] = useState(true)
     const [UserProfile, setUserProfile] = useState(null)
     const [userprofileChat, setUserProfileChat] = useState(null)
-    const [SendLoading, setSendLoading] = useState(false)
+    const [SendLoading, setSendLoading] = useState(false);
+const [isHidden,setHidden]=useState(false)
+
+
     useEffect(() => {
 
         const newSocket = io("https://chat-socket-97vj.onrender.com");
         setsocket(newSocket)
 
         return () => {
-            socket.on("disconnect", (res) => {
+            newSocket.disconnect((res)=>{
                 setonlineUser(res)
-            })
+            });
+            newSocket.off("disconnect");
         }
-    }, [user]);
+    }, [user,isHidden]);
+
+  
 
     useEffect(() => {
         if (socket === null) return
-
+if(document.hidden)return
         socket.emit("addNewUser", user?.id);
 
         socket.on("getonlineUsers", (res) => {
             setonlineUser(res)
-
-
         })
 
         return () => {
             socket.off("getonlineUsers")
         }
     }, [socket])
-
+    
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            setHidden(document.hidden);
+        };
+    
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+    
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, []);
     useEffect(() => {
         if (socket === null) return;
 

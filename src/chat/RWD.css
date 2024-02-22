@@ -50,7 +50,12 @@
         margin-left: 5px;
         position: relative;
     }
-    
+.box form{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
     .input {
         padding: 10px;
         width: 40px;
@@ -63,31 +68,41 @@
         font-size: 20px;
         color: hsl(207, 91%, 75%);
         outline: none;
-        transition: .5s;
+        transition:all .1s;
+        
     }
     .box input::placeholder{
       color: transparent;
     }
-    .active-input input{
+    .active-input input {
         width: 230px;
         background: white;
         border: 1px solid hsl(207, 91%, 75%);
         border-radius: 10px;
+        transition: all 0.3s ease-out; 
     }
-    .active-input input::placeholder{
+    
+    .active-input input::placeholder {
         color: hsl(0, 0%, 50%);
-        ;
     }
-    .active-input ~.nav-user{
+    
+    .active-input ~ .nav-user {
         display: none !important;
     }
+    
+  
    
     .box i{
         position: absolute;
         top: 50%;
-        right: 0px;
+        right: -30px;
         transform: translate(-50%,-50%);
         font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
         color: hsl(207, 91%, 75%);
         transition: .2s;
     }

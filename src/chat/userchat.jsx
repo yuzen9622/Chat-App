@@ -8,7 +8,7 @@ import { url } from '../servirce';
 import moment from 'moment';
 
 function UserChat({ chat, user }) {
-    const { onlineUser, markthisread, markthisNotificationRead, isMobile } = useContext(ChatContext)
+    const { onlineUser, markthisread, isMobile } = useContext(ChatContext)
     const { recipinetUser } = useFetchRecipinet(chat, user)
     const { lastestMessage,NoReadMessages } = useFetchLastMessage(chat)
 

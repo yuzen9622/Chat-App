@@ -18,7 +18,7 @@ function ChatBoard() {
         onlineUser,
         isMobile,
         updateCurrentChat,
-        SendLoading,
+        
     } = useContext(ChatContext);
     const { user } = useContext(AuthContext);
     const [textmessage, setTextmessage] = useState("");
@@ -28,8 +28,8 @@ function ChatBoard() {
     const { lastestMessage } = useFetchLastMessage(currentChat);
     const navigate = useNavigate();
     useEffect(() => {
-        scroll.current?.scrollIntoView({ behavior: "smooth" });
-    }, [currentChat, messages]);
+       if(!loadingUser) scroll.current?.scrollIntoView({ behavior: "smooth" });
+    }, [currentChat, messages,loadingUser]);
 
     const spliceEmail = (email) => {
         const mailId = email.split("@");
