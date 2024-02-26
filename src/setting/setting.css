@@ -145,3 +145,45 @@
     font-size: 18px;
     max-height: 250px;
 }
+/*################Follow#############*/
+
+.follow{
+    display: flex;
+    margin: 0 10px;
+    flex-direction: column;
+    padding: 15px;
+    align-items: center;
+}
+.follow-site{
+    display: flex;
+    padding: 5px;
+    flex-wrap: wrap;
+}
+.follow-user img{
+border-radius:15px;
+border: 2px solid rgb(239, 239, 239);
+}
+.follow-user{
+    margin: 5px;
+    padding: 5px;
+}
+/*gimmlier*/
+
+.glimmer-panel-profile {
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+    border: 1px dashed #aaa;
+    background: linear-gradient(90deg, rgba(221, 221, 221, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    border-radius: 6px;
+
+    padding: 10px;
+}
+.img-glimmer-profile {
+    display: block;
+    width: 60px;
+    height: 60px;
+
+    border-radius: 15px;
+    background: #f0f0f0;
+}
