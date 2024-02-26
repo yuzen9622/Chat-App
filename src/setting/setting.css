@@ -158,9 +158,11 @@
     display: flex;
     padding: 5px;
     flex-wrap: wrap;
+   justify-content: center;
 }
 .follow-user img{
 border-radius:15px;
+width: 100px;
 border: 2px solid rgb(239, 239, 239);
 }
 .follow-user{

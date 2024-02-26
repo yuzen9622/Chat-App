@@ -27,6 +27,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const [userprofileChat, setUserProfileChat] = useState(null);
   const [SendLoading, setSendLoading] = useState(false);
   const [Friend, setFriend] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [AllFriend, setAllFriend] = useState(null);
   const [isHidden, setHidden] = useState(false);
 
@@ -208,9 +209,9 @@ export const ChatContextProvider = ({ children, user }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(userChats);
         setCurrentChat(data);
-        if (userChats?.some((user) => user._id == data._id)) return;
+        if (userChats?.find((user) => user._id == data._id) !== undefined)
+          return;
         setUserChat((prev) => [...prev, data]);
       })
       .catch((err) => {
@@ -311,6 +312,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const createFriend = useCallback(async (member1, member2) => {
     if (!member1 && !member2) return;
     try {
+      setLoading(true);
       const response = await fetch(`${url}/friend/create`, {
         method: "POST",
         body: JSON.stringify({
@@ -324,9 +326,11 @@ export const ChatContextProvider = ({ children, user }) => {
       console.log(formattedData);
       setFriend((prev) => [...prev, formattedData]);
       setAllFriend((prev) => [...prev, data]);
+      setLoading(false);
     } catch (error) {}
   }, []);
   const delFriend = useCallback(async (member1, member2) => {
+    setLoading(true);
     const response = await fetch(`${url}/friend/delete`, {
       method: "POST",
       body: JSON.stringify({
@@ -336,18 +340,20 @@ export const ChatContextProvider = ({ children, user }) => {
       headers: { "Content-Type": "application/json" },
     });
     const data = await response.json();
-    const formattedData = data.map((entry) =>
+    const formattedData = await data?.map((entry) =>
       entry.members?.find((id) => id !== user.id)
     );
     setAllFriend(data);
     setFriend(formattedData);
+    setLoading(false);
   }, []);
+
   useEffect(() => {
     const getFriend = async () => {
       try {
         const response = await fetch(`${url}/friend/${user.id}`);
         const data = await response.json();
-        const formattedData = data.map((entry) =>
+        const formattedData = await data?.map((entry) =>
           entry.members?.find((id) => id !== user.id)
         );
         setAllFriend(data);
@@ -389,6 +395,7 @@ export const ChatContextProvider = ({ children, user }) => {
         Friend,
         delFriend,
         AllFriend,
+        loading,
       }}
     >
       {children}

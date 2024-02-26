@@ -14,7 +14,6 @@ export default function FollowUser({ chat, user }) {
           onClick={() => navigate(`/user/${recipinetUser?._id}`)}
         >
           <img
-            style={{ width: "100px" }}
             src={
               recipinetUser?.Avatar
                 ? `${url}/users/avatar/${recipinetUser?._id}`

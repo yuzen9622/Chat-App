@@ -16,6 +16,7 @@ export default function UserProfile() {
     createFriend,
     Friend,
     delFriend,
+    loading,
   } = useContext(ChatContext);
 
   const { id } = params;
@@ -32,7 +33,7 @@ export default function UserProfile() {
   if (user.id == UserProfile?._id) navigate("/Profile");
   return (
     <div className="profile">
-      {UserProfile?._id == id ? (
+      {UserProfile?._id == id && !loading ? (
         <>
           <div className="profile-img">
             <img
