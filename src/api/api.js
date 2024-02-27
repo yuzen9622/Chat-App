@@ -37,16 +37,19 @@ export const useFetchLastMessage = (chat) => {
     const { newMessage, notifications, messages } = useContext(ChatContext);
     const [lastestMessage, setLastestMessage] = useState(null);
     const [NoReadMessages, setNoReadMessage] = useState(null);
+    const [Loading, setLoading] = useState(true);
     useEffect(() => {
 
         const getMessage = async () => {
             try {
+               
                 const response = await fetch(`${url}/msg/${chat?._id}`)
                 const data = await response.json()
                 const lastmessage = data[data?.length - 1];
                 const noReadMessage= data?.filter((msg)=>msg?.isRead!==true&&msg?.senderId!==user.id)
                 setLastestMessage(lastmessage)
                 setNoReadMessage(noReadMessage)
+                setLoading(false)
             } catch (error) {
 
             }
@@ -55,7 +58,7 @@ export const useFetchLastMessage = (chat) => {
         getMessage()
     }, [newMessage, notifications, messages])
 
-    return { lastestMessage ,NoReadMessages}
+    return { lastestMessage ,NoReadMessages,Loading}
 }
 
 

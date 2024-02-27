@@ -10,11 +10,11 @@ import moment from "moment";
 function UserChat({ chat, user }) {
   const { onlineUser, markthisread, isMobile } = useContext(ChatContext);
   const { recipinetUser } = useFetchRecipinet(chat, user);
-  const { lastestMessage, NoReadMessages } = useFetchLastMessage(chat);
+  const { lastestMessage, NoReadMessages, Loading } = useFetchLastMessage(chat);
 
   return (
     <>
-      {recipinetUser ? (
+      {recipinetUser && !Loading ? (
         <button
           type="button"
           className="tab"
