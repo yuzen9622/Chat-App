@@ -252,7 +252,7 @@ function ChatBoard() {
                                 user,
                                 currentChat._id,
                                 false,
-                                sendMessage
+                                repeatMsg
                               )
                             }
                           />
@@ -268,7 +268,7 @@ function ChatBoard() {
                                 user,
                                 currentChat._id,
                                 false,
-                                sendMessage
+                                repeatMsg
                               );
                               setTextmessage("");
                               continueFoucs();
