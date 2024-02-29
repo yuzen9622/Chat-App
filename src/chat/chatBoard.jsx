@@ -18,9 +18,11 @@ function ChatBoard() {
     onlineUser,
     isMobile,
     updateCurrentChat,
+    SendLoading,
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
   const [textmessage, setTextmessage] = useState("");
+  const [repeatMsg, setRepeatMsg] = useState(null);
   const { recipinetUser, loading } = useFetchRecipinet(currentChat, user);
   const scroll = useRef();
 
@@ -29,7 +31,9 @@ function ChatBoard() {
   useEffect(() => {
     if (!loadingUser) scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentChat, messages, loadingUser]);
-
+  useEffect(() => {
+    setRepeatMsg(null);
+  }, [currentChat, SendLoading]);
   const spliceEmail = (email) => {
     const mailId = email.split("@");
     const id = "@" + mailId[0];
@@ -120,26 +124,109 @@ function ChatBoard() {
                               }`}
                               key={index}
                             >
-                              <div className="message">
-                                <span className="text">{message.text}</span>
-                              </div>
-                              <div className="time">
-                                <div className="time">
-                                  {message?.senderId === user.id &&
-                                  lastestMessage?.isRead
-                                    ? "已讀"
-                                    : message?.senderId === user.id &&
-                                      message?.isRead
-                                    ? "已讀"
-                                    : ""}
+                              {message?.repeatMsg ? (
+                                <div className="repeat-msg">
+                                  <div className="repeat-user">
+                                    <span>
+                                      已回覆
+                                      {message?.repeatMsg?.senderId === user.id
+                                        ? user.name
+                                        : recipinetUser?.name}
+                                    </span>
+                                    <div className="repeat-message">
+                                      <span className="text">text</span>
+                                    </div>
+                                  </div>
+                                  <div
+                                    className="orign-message"
+                                    style={
+                                      message?.senderId === user.id
+                                        ? {
+                                            display: "flex",
+                                            flexDirection: "row-reverse",
+                                            alignItems: "flex-end",
+                                          }
+                                        : {
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            alignItems: "flex-end",
+                                          }
+                                    }
+                                  >
+                                    <div className="message">
+                                      <span className="text">
+                                        {message.text}
+                                      </span>
+                                    </div>
+                                    <div className="time">
+                                      <div className="time">
+                                        {message?.senderId === user.id &&
+                                        lastestMessage?.isRead
+                                          ? "已讀"
+                                          : message?.senderId === user.id &&
+                                            message?.isRead
+                                          ? "已讀"
+                                          : ""}
+                                      </div>
+                                      {moment(message.createdAt)
+                                        .locale("zh-tw")
+                                        .format("A h:mm")}{" "}
+                                    </div>
+                                  </div>
                                 </div>
-                                {moment(message.createdAt)
-                                  .locale("zh-tw")
-                                  .format("A h:mm")}{" "}
+                              ) : (
+                                <>
+                                  <div className="message">
+                                    <span className="text">{message.text}</span>
+                                  </div>
+                                  <div className="time">
+                                    <div className="time">
+                                      {message?.senderId === user.id &&
+                                      lastestMessage?.isRead
+                                        ? "已讀"
+                                        : message?.senderId === user.id &&
+                                          message?.isRead
+                                        ? "已讀"
+                                        : ""}
+                                    </div>
+                                    {moment(message.createdAt)
+                                      .locale("zh-tw")
+                                      .format("A h:mm")}{" "}
+                                  </div>
+                                </>
+                              )}
+
+                              <div
+                                className="tool"
+                                style={{ rotate: "270deg" }}
+                              >
+                                <button onClick={() => setRepeatMsg(message)}>
+                                  <i class="fa-solid fa-arrow-turn-up"></i>
+                                </button>
                               </div>
                             </div>
                           ))}
                       </div>
+                      {repeatMsg ? (
+                        <div className="repeat">
+                          <div className="repeat-data">
+                            <p>
+                              回覆
+                              {repeatMsg?.senderId === user.id
+                                ? user.name
+                                : recipinetUser?.name}
+                            </p>
+                            <button onClick={() => setRepeatMsg(null)}>
+                              x
+                            </button>
+                          </div>
+                          <span>
+                            <p>{repeatMsg?.text}</p>
+                          </span>
+                        </div>
+                      ) : (
+                        ""
+                      )}
 
                       <div className="chat-input">
                         {isMobile() ? (
@@ -274,26 +361,108 @@ function ChatBoard() {
                             }`}
                             key={index}
                           >
-                            <div className="message">
-                              <span className="text">{message.text}</span>
-                            </div>
-                            <div className="time">
-                              <div className="time">
-                                {message?.senderId === user.id &&
-                                lastestMessage?.isRead
-                                  ? "已讀"
-                                  : message?.senderId === user.id &&
-                                    message?.isRead
-                                  ? "已讀"
-                                  : ""}
+                            {message?.repeatMsg ? (
+                              <div className="repeat-msg">
+                                <div className="repeat-user">
+                                  <span>
+                                    已回覆
+                                    {message?.repeatMsg?.senderId === user.id
+                                      ? message?.senderId === user.id
+                                        ? "自己"
+                                        : "你"
+                                      : message?.senderId === user.id
+                                      ? recipinetUser?.name
+                                      : "自己"}
+                                  </span>
+                                  <div className="repeat-message">
+                                    <span className="text">
+                                      {message?.repeatMsg?.text}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div
+                                  className="orign-message"
+                                  style={
+                                    message?.senderId === user.id
+                                      ? {
+                                          display: "flex",
+                                          flexDirection: "row-reverse",
+                                          alignItems: "flex-end",
+                                        }
+                                      : {
+                                          display: "flex",
+                                          flexDirection: "row",
+                                          alignItems: "flex-end",
+                                        }
+                                  }
+                                >
+                                  <div className="message">
+                                    <span className="text">{message.text}</span>
+                                  </div>
+                                  <div className="time">
+                                    <div className="time">
+                                      {message?.senderId === user.id &&
+                                      lastestMessage?.isRead
+                                        ? "已讀"
+                                        : message?.senderId === user.id &&
+                                          message?.isRead
+                                        ? "已讀"
+                                        : ""}
+                                    </div>
+                                    {moment(message.createdAt)
+                                      .locale("zh-tw")
+                                      .format("A h:mm")}{" "}
+                                  </div>
+                                </div>
                               </div>
-                              {moment(message.createdAt)
-                                .locale("zh-tw")
-                                .format("A h:mm")}{" "}
+                            ) : (
+                              <>
+                                <div className="message">
+                                  <span className="text">{message.text}</span>
+                                </div>
+                                <div className="time">
+                                  <div className="time">
+                                    {message?.senderId === user.id &&
+                                    lastestMessage?.isRead
+                                      ? "已讀"
+                                      : message?.senderId === user.id &&
+                                        message?.isRead
+                                      ? "已讀"
+                                      : ""}
+                                  </div>
+                                  {moment(message.createdAt)
+                                    .locale("zh-tw")
+                                    .format("A h:mm")}{" "}
+                                </div>
+                              </>
+                            )}
+
+                            <div className="tool" style={{ rotate: "270deg" }}>
+                              <button onClick={() => setRepeatMsg(message)}>
+                                <i class="fa-solid fa-arrow-turn-up"></i>
+                              </button>
                             </div>
                           </div>
                         ))}
                     </div>
+                    {repeatMsg ? (
+                      <div className="repeat">
+                        <div className="repeat-data">
+                          <p>
+                            回覆
+                            {repeatMsg?.senderId === user.id
+                              ? "自己"
+                              : recipinetUser?.name}
+                          </p>
+                          <button onClick={() => setRepeatMsg(null)}>x</button>
+                        </div>
+                        <span>
+                          <p>{repeatMsg?.text}</p>
+                        </span>
+                      </div>
+                    ) : (
+                      ""
+                    )}
 
                     <div className="chat-input">
                       {isMobile() ? (
@@ -319,7 +488,7 @@ function ChatBoard() {
                               user,
                               currentChat._id,
                               false,
-                              sendMessage
+                              repeatMsg
                             )
                           }
                         />
@@ -335,7 +504,7 @@ function ChatBoard() {
                               user,
                               currentChat._id,
                               false,
-                              sendMessage
+                              repeatMsg
                             );
                             continueFoucs();
                             setTextmessage("");

@@ -292,7 +292,25 @@
 
 
 }
-
+.tool{
+    display: none;
+    padding: 5px;
+}
+.tool button{
+    border: none;
+    padding: 5px;
+    background-color: transparent;
+    color:#333;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
+.tool button:hover{
+    background-color:hsl(0, 0%, 84%);
+}
+.tool i{
+    font-size: 16px;
+}
 .user-message {
     display: flex;
     flex-direction: row-reverse;
@@ -333,6 +351,50 @@
     border: 0.1rem solid hsl(0, 0%, 95%);
 }
 
+.repeat{
+    width: 100%;
+}
+.user-message .repeat-user{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+.other-message .repeat-user{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+.repeat-user span{
+    display: flex;
+    width: auto;
+   
+}
+.repeat-data{
+    display: flex;
+    justify-content: space-between;
+  
+  
+}
+.repeat-data button{
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+}
+.repeat-data p{
+    font-size: 20px;
+}
+ .user-message .repeat-msg,.repeat-message{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    width: auto;
+}
+.other-message .repeat-msg,.repeat-message {
+    display: flex;
+    flex-direction: column;
+    align-items:start;
+    width: auto;
+}
 .other-message {
     display: flex;
 
@@ -340,7 +402,15 @@
     margin: 5px 0;
 
 }
-
+.repeat-message span{
+    padding: 10px;
+    background-color:#f0f0f0;
+    border-radius: 15px;
+    margin-bottom: 5px;
+}
+.repeat-user{
+    font-size: 15px;
+}
 .user-message .time {
     display: flex;
     flex-direction: column;
@@ -357,7 +427,9 @@
     word-wrap: break-word;
 
 }
-
+:is(.other-message,.user-message):hover .tool{
+display: flex;
+}
 .user-message .time,
 .other-message .time {
     font-size: 12px;

@@ -175,7 +175,7 @@ export const ChatContextProvider = ({ children, user }) => {
   });
 
   const sendMessage = useCallback(
-    async (textmessage, sender, currentChatId, isRead) => {
+    async (textmessage, sender, currentChatId, isRead,repeatmsg) => {
       if (!textmessage) return null;
       try {
         setSendLoading(true);
@@ -186,6 +186,7 @@ export const ChatContextProvider = ({ children, user }) => {
             senderId: sender.id,
             text: textmessage,
             isRead: isRead,
+            repeatmsg:repeatmsg
           }),
           headers: { "Content-Type": "application/json" },
         });
