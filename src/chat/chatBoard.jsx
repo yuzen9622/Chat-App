@@ -249,6 +249,8 @@ function ChatBoard() {
                             className="react-input-emoji--input text-input"
                             placeholder="Messages..."
                             value={textmessage}
+                            onFocus={() => updateTyping(true)}
+                            onBlur={() => updateTyping(false)}
                             onInput={(e) => setTextmessage(e.target.value)}
                           />
                         ) : (
@@ -256,6 +258,8 @@ function ChatBoard() {
                             keepOpened
                             onChange={setTextmessage}
                             value={textmessage}
+                            onFocus={() => updateTyping(true)}
+                            onBlur={() => updateTyping(false)}
                             placeholder="Message..."
                             fontFamily="Helvetica, Arial, sans-serif"
                             cleanOnEnter
@@ -496,6 +500,7 @@ function ChatBoard() {
                           id="text-input"
                           placeholder="Messages..."
                           value={textmessage}
+                          onBlur={() => updateTyping(false)}
                           onInput={(e) => {
                             setTextmessage(e.target.value);
                             updateTyping(true);
