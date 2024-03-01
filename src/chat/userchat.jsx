@@ -8,7 +8,8 @@ import { url } from "../servirce";
 import moment from "moment";
 
 function UserChat({ chat, user }) {
-  const { onlineUser, markthisread, isMobile } = useContext(ChatContext);
+  const { onlineUser, markthisread, isMobile, typingUser } =
+    useContext(ChatContext);
   const { recipinetUser } = useFetchRecipinet(chat, user);
   const { lastestMessage, NoReadMessages, Loading } = useFetchLastMessage(chat);
 
@@ -77,7 +78,11 @@ function UserChat({ chat, user }) {
                               : { fontWeight: "600" }
                           }
                         >
-                          {NoReadMessages?.length > 3
+                          {typingUser.some(
+                            (uid) => uid.id === recipinetUser?._id
+                          )
+                            ? "對方輸入中..."
+                            : NoReadMessages?.length > 3
                             ? `${NoReadMessages?.length}+則訊息`
                             : lastestMessage?.senderId == user?.id
                             ? `你:${lastestMessage?.text}`
@@ -90,7 +95,11 @@ function UserChat({ chat, user }) {
                           •
                         </p>
                         <p className="text-time">
-                          {moment(lastestMessage?.createdAt).fromNow()}
+                          {typingUser.some(
+                            (uid) => uid.id === recipinetUser?._id
+                          )
+                            ? "現在"
+                            : moment(lastestMessage?.createdAt).fromNow()}
                         </p>
                       </>
                     }

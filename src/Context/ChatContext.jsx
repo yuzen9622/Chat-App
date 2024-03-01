@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { io, emit, on } from "socket.io-client";
+import { io, emit, on, Socket } from "socket.io-client";
 import { url } from "../servirce";
 
 export const ChatContext = createContext();
@@ -30,7 +30,8 @@ export const ChatContextProvider = ({ children, user }) => {
   const [loading, setLoading] = useState(false);
   const [AllFriend, setAllFriend] = useState(null);
   const [isHidden, setHidden] = useState(false);
-
+  const [Typing, setTyping] = useState(false);
+  const [typingUser, setTypingUser] = useState([]);
   useEffect(() => {
     const newSocket = io("https://chat-socket-97vj.onrender.com");
     setsocket(newSocket);
@@ -58,6 +59,28 @@ export const ChatContextProvider = ({ children, user }) => {
   }, [socket]);
 
   useEffect(() => {
+    if (socket === null) return;
+    const id = user.id;
+    const status = Typing;
+    const recipientId = currentChat?.members.find((id) => id !== user?.id);
+    socket.emit("typing", { id, recipientId, status });
+
+    socket.on("userTyping", (res) => {
+      var typingdata = [...typingUser];
+      if (res.istype) {
+        setTypingUser((prev) => [...prev, res]);
+      } else {
+        var data = typingdata.filter((user) => user?.id !== res.id);
+        setTypingUser(data);
+      }
+    });
+  }, [socket, Typing]);
+
+  const updateTyping = useCallback((status) => {
+    setTyping(status);
+  }, []);
+
+  useEffect(() => {
     const handleVisibilityChange = () => {
       setHidden(document.hidden);
     };
@@ -72,7 +95,7 @@ export const ChatContextProvider = ({ children, user }) => {
     if (socket === null) return;
 
     const recipientId = currentChat?.members.find((id) => id !== user?.id);
-
+    if (!recipientId) return;
     if (recipientId) {
       socket.emit("sendMessage", { ...newMessage, recipientId });
     }
@@ -175,7 +198,7 @@ export const ChatContextProvider = ({ children, user }) => {
   });
 
   const sendMessage = useCallback(
-    async (textmessage, sender, currentChatId, isRead,repeatmsg) => {
+    async (textmessage, sender, currentChatId, isRead, repeatmsg) => {
       if (!textmessage) return null;
       try {
         setSendLoading(true);
@@ -186,7 +209,7 @@ export const ChatContextProvider = ({ children, user }) => {
             senderId: sender.id,
             text: textmessage,
             isRead: isRead,
-            repeatmsg:repeatmsg
+            repeatmsg: repeatmsg,
           }),
           headers: { "Content-Type": "application/json" },
         });
@@ -397,6 +420,8 @@ export const ChatContextProvider = ({ children, user }) => {
         delFriend,
         AllFriend,
         loading,
+        updateTyping,
+        typingUser,
       }}
     >
       {children}

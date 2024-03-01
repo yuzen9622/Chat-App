@@ -19,6 +19,8 @@ function ChatBoard() {
     isMobile,
     updateCurrentChat,
     SendLoading,
+    updateTyping,
+    typingUser,
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
   const [textmessage, setTextmessage] = useState("");
@@ -206,6 +208,17 @@ function ChatBoard() {
                               </div>
                             </div>
                           ))}
+                        {typingUser.some(
+                          (uid) => uid.id === recipinetUser?._id
+                        ) ? (
+                          <div className="other-message typing">
+                            <div className="message">
+                              <div className="typing-loader"></div>
+                            </div>
+                          </div>
+                        ) : (
+                          ""
+                        )}
                       </div>
                       {repeatMsg ? (
                         <div className="repeat">
@@ -444,6 +457,17 @@ function ChatBoard() {
                             </div>
                           </div>
                         ))}
+                      {typingUser.some(
+                        (uid) => uid.id === recipinetUser?._id
+                      ) ? (
+                        <div className="other-message typing">
+                          <div className="message">
+                            <div className="typing-loader"></div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </div>
                     {repeatMsg ? (
                       <div className="repeat">
@@ -472,12 +496,17 @@ function ChatBoard() {
                           id="text-input"
                           placeholder="Messages..."
                           value={textmessage}
-                          onInput={(e) => setTextmessage(e.target.value)}
+                          onInput={(e) => {
+                            setTextmessage(e.target.value);
+                            updateTyping(true);
+                          }}
                         />
                       ) : (
                         <InputEmoji
                           keepOpened
                           onChange={setTextmessage}
+                          onFocus={() => updateTyping(true)}
+                          onBlur={() => updateTyping(false)}
                           value={textmessage}
                           placeholder="Message..."
                           fontFamily="Helvetica, Arial, sans-serif"
