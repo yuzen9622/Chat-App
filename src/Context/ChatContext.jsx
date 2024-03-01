@@ -60,7 +60,8 @@ export const ChatContextProvider = ({ children, user }) => {
 
   useEffect(() => {
     if (socket === null) return;
-    const id = user.id;
+    if (!user?.id) return;
+    const id = user?.id;
     const status = Typing;
     const recipientId = currentChat?.members.find((id) => id !== user?.id);
     socket.emit("typing", { id, recipientId, status });
