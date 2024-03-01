@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { ChatContext } from "../Context/ChatContext";
 import { AuthContext } from "../Context/AuthContext";
 import UserChat from "./userchat";
@@ -37,18 +37,30 @@ function Chatlist() {
                 </div>
 
                 {!lodingChat ? (
-                  userChats?.map((chat, index) => (
+                  userChats?.length > 0 ? (
+                    userChats?.map((chat, index) => (
+                      <div
+                        className="userchat-list"
+                        key={index}
+                        onClick={() => {
+                          updateCurrentChat(chat);
+                          !isMobile() && active(index);
+                        }}
+                      >
+                        <UserChat user={user} chat={chat} key={index} />
+                      </div>
+                    ))
+                  ) : (
                     <div
-                      className="userchat-list"
-                      key={index}
-                      onClick={() => {
-                        updateCurrentChat(chat);
-                        !isMobile() && active(index);
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
-                      <UserChat user={user} chat={chat} key={index} />
+                      <h3>快去搜尋好友!!!</h3>
                     </div>
-                  ))
+                  )
                 ) : (
                   <div className="load-div">
                     <div className="loader"></div>
@@ -65,18 +77,30 @@ function Chatlist() {
           </div>
 
           {!lodingChat ? (
-            userChats?.map((chat, index) => (
+            userChats?.length ? (
+              userChats?.map((chat, index) => (
+                <div
+                  className="userchat-list"
+                  key={index}
+                  onClick={() => {
+                    updateCurrentChat(chat);
+                    active(index);
+                  }}
+                >
+                  <UserChat user={user} chat={chat} key={index} />
+                </div>
+              ))
+            ) : (
               <div
-                className="userchat-list"
-                key={index}
-                onClick={() => {
-                  updateCurrentChat(chat);
-                  active(index);
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <UserChat user={user} chat={chat} key={index} />
+                <h3>快去搜尋好友!!!</h3>
               </div>
-            ))
+            )
           ) : (
             <div className="load-div">
               <div className="loader"></div>

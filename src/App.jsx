@@ -16,6 +16,7 @@ function App() {
   console.log(user ? 1 : 0);
   window.addEventListener("storage", (e) => {
     sessionStorage.setItem(e.key, e.oldValue);
+    localStorage.setItem(e.key, e.oldValue);
   });
 
   return (

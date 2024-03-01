@@ -3,7 +3,9 @@ import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { url } from "../servirce";
 import chat from "../img/chat.png";
+import { useNavigate } from "react-router-dom";
 function Sign() {
+  const navigate = useNavigate();
   const { signInfo, updateSignInfo } = useContext(AuthContext);
   const [signStatus, setSignStatus] = useState("");
   const [isSign, setIsSign] = useState(false);
@@ -29,10 +31,11 @@ function Sign() {
             bio: data.bio,
           };
           localStorage.setItem("User", JSON.stringify(datas));
-          window.location.reload();
         } else {
           setSignStatus(data);
         }
+        navigate("/");
+        window.location.reload();
         setIsSign(false);
       });
   };
@@ -63,7 +66,6 @@ function Sign() {
             }}
           />
           <label htmlFor="email">Email</label>
-          <pre>#名稱請超過三個字元</pre>
         </div>
         <div className="user">
           <input
