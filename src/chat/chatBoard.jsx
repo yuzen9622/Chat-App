@@ -41,6 +41,7 @@ function ChatBoard() {
     const id = "@" + mailId[0];
     return id;
   };
+
   const dataTime = (firstTime, nextTime, PreviousTime) => {
     var firstmsg = new Date(firstTime);
     let resultTime = null;
@@ -64,7 +65,7 @@ function ChatBoard() {
     const input = document.getElementById("text-input");
     if (input) input.focus();
   };
-
+  let typingTimeout;
   return (
     <>
       {isMobile() ? (
@@ -292,17 +293,21 @@ function ChatBoard() {
                             className="react-input-emoji--input text-input"
                             placeholder="Messages..."
                             value={textmessage}
-                            onFocus={() => updateTyping(true)}
                             onBlur={() => updateTyping(false)}
-                            onInput={(e) => setTextmessage(e.target.value)}
+                            onInput={(e) => {
+                              setTextmessage(e.target.value);
+                              updateTyping(true);
+                              clearTimeout(typingTimeout);
+                              typingTimeout = setTimeout(() => {
+                                updateTyping(false);
+                              }, 800);
+                            }}
                           />
                         ) : (
                           <InputEmoji
                             keepOpened
                             onChange={setTextmessage}
                             value={textmessage}
-                            onFocus={() => updateTyping(true)}
-                            onBlur={() => updateTyping(false)}
                             placeholder="Message..."
                             fontFamily="Helvetica, Arial, sans-serif"
                             cleanOnEnter
@@ -579,9 +584,14 @@ function ChatBoard() {
                       ) : (
                         <InputEmoji
                           keepOpened
-                          onChange={setTextmessage}
-                          onFocus={() => updateTyping(true)}
-                          onBlur={() => updateTyping(false)}
+                          onChange={(e) => {
+                            setTextmessage(e);
+                            updateTyping(true);
+                            clearTimeout(typingTimeout);
+                            typingTimeout = setTimeout(() => {
+                              updateTyping(false);
+                            }, 800);
+                          }}
                           value={textmessage}
                           placeholder="Message..."
                           fontFamily="Helvetica, Arial, sans-serif"
