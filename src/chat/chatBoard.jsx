@@ -255,7 +255,7 @@ function ChatBoard() {
                         {typingUser.some(
                           (uid) => uid.id === recipinetUser?._id
                         ) ? (
-                          <div className="other-message typing">
+                          <div className="other-message typing" ref={scroll}>
                             <div className="message">
                               <div className="typing-loader"></div>
                             </div>
@@ -539,7 +539,7 @@ function ChatBoard() {
                       {typingUser.some(
                         (uid) => uid.id === recipinetUser?._id
                       ) ? (
-                        <div className="other-message typing">
+                        <div className="other-message typing" ref={scroll}>
                           <div className="message">
                             <div className="typing-loader"></div>
                           </div>
