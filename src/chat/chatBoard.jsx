@@ -136,7 +136,9 @@ function ChatBoard() {
                                         : recipinetUser?.name}
                                     </span>
                                     <div className="repeat-message">
-                                      <span className="text">text</span>
+                                      <span className="text">
+                                        {message?.repeatMsg?.text}
+                                      </span>
                                     </div>
                                   </div>
                                   <div

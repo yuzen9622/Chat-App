@@ -50,7 +50,7 @@
 .userlist p {
     margin: 0;
     color: black;
-
+font-size: 16px;
 }
 
 .chat-list {
@@ -388,12 +388,14 @@
     flex-direction: column;
     align-items: end;
     width: auto;
+    color: hsl(0, 0%, 47%);
 }
 .other-message .repeat-msg,.repeat-message {
     display: flex;
     flex-direction: column;
     align-items:start;
     width: auto;
+   
 }
 .other-message {
     display: flex;
@@ -405,11 +407,14 @@
 .repeat-message span{
     padding: 10px;
     background-color:#f0f0f0;
+  
     border-radius: 15px;
     margin-bottom: 5px;
 }
 .repeat-user{
     font-size: 15px;
+    font-weight: bold;
+    color: hsl(0, 0%, 47%);
 }
 .user-message .time {
     display: flex;
@@ -427,6 +432,7 @@
     word-wrap: break-word;
 
 }
+
 :is(.other-message,.user-message):hover .tool{
 display: flex;
 }
@@ -660,9 +666,9 @@ form {
       var(--_g) 50%  50%,
       var(--_g) 100% 50%;
     background-size: calc(100%/4) 40%; /* Adjust the first value (100%/4) to make the dot smaller */
-    animation: l3 1s infinite linear;
+    animation: l4 1s infinite linear;
 }
-  @keyframes l3 {
+  @keyframes l4 {
       20%{background-position:0%   0%, 50%  50%,100%  50%}
       40%{background-position:0% 100%, 50%   0%,100%  50%}
       60%{background-position:0%  50%, 50% 100%,100%   0%}
