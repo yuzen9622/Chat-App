@@ -17,6 +17,7 @@ function UserChat({ chat, user }) {
     <>
       {recipinetUser && !Loading ? (
         <button
+          title={recipinetUser?.name}
           type="button"
           className="tab"
           style={

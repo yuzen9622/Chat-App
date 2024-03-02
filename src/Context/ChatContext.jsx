@@ -222,7 +222,8 @@ export const ChatContextProvider = ({ children, user }) => {
     []
   );
 
-  const createChat = useCallback((firstId, secondId) => {
+  const createChat = useCallback((firstId, secondId, newuserChat) => {
+    console.log(newuserChat);
     fetch(`${url}/chat`, {
       method: "POST",
       body: JSON.stringify({
@@ -234,11 +235,10 @@ export const ChatContextProvider = ({ children, user }) => {
       .then((res) => res.json())
       .then((data) => {
         setCurrentChat(data);
-        console.log(userChats?.find((user) => user._id == data._id));
-        if (userChats?.find((user) => user._id == data._id) !== undefined)
-          return;
 
-        setUserChat((prev) => [...prev, data]);
+        if (newuserChat?.find((user) => user._id === data._id) === undefined) {
+          setUserChat((prev) => [...prev, data]);
+        }
       })
       .catch((err) => {
         console.error(err);

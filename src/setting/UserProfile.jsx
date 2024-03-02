@@ -5,6 +5,7 @@ import { url } from "../servirce";
 import avarter from "../img/user.png";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import UserChat from "../chat/userchat";
 
 export default function UserProfile() {
   const params = useParams();
@@ -17,6 +18,7 @@ export default function UserProfile() {
     Friend,
     delFriend,
     loading,
+    userChats,
   } = useContext(ChatContext);
 
   const { id } = params;
@@ -82,7 +84,7 @@ export default function UserProfile() {
                 <button onClick={() => delFriend(user.id, id)}>解除好友</button>
                 <button
                   onClick={() => {
-                    createChat(user.id, id);
+                    createChat(user.id, id, userChats);
                     navigate("/chat");
                   }}
                 >

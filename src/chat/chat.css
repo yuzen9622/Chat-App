@@ -709,3 +709,18 @@ form {
     border-radius: 50%;
     background: #f0f0f0;
 }
+
+/* data-time*/
+
+.data-time{
+    display: flex;
+    justify-content: center;
+    
+}
+.data-time span{
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+   color:rgb(101, 103, 107);
+}
