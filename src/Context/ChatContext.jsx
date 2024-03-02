@@ -115,7 +115,6 @@ export const ChatContextProvider = ({ children, user }) => {
     socket.on("getMessage", handleReceivedMessage);
     socket.on("getNotification", (res) => {
       const ischatOpen = currentChat?.members.some((id) => id === res.senderId);
-      console.log(ischatOpen);
 
       if (ischatOpen) {
         markthisread(currentChat?._id, res.senderId);
@@ -235,8 +234,10 @@ export const ChatContextProvider = ({ children, user }) => {
       .then((res) => res.json())
       .then((data) => {
         setCurrentChat(data);
+        console.log(userChats?.find((user) => user._id == data._id));
         if (userChats?.find((user) => user._id == data._id) !== undefined)
           return;
+
         setUserChat((prev) => [...prev, data]);
       })
       .catch((err) => {
@@ -250,7 +251,9 @@ export const ChatContextProvider = ({ children, user }) => {
       const data = await response.json();
       setUserChat(data);
       setCurrentChat(null);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
   const markthisNotificationRead = useCallback(
@@ -370,6 +373,7 @@ export const ChatContextProvider = ({ children, user }) => {
     );
     setAllFriend(data);
     setFriend(formattedData);
+    setCurrentChat(null);
     setLoading(false);
   }, []);
 
