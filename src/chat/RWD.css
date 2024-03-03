@@ -23,6 +23,7 @@
     .chat-list {
         width: auto;
         min-width: 100px;
+        height: 100%;
     }
 
     .img-online {

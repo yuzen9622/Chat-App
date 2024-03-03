@@ -1,7 +1,7 @@
 import React from "react";
 import { useFetchRecipinet } from "../api/api";
 import { url } from "../servirce";
-import avatar from "../img/user.png";
+import avatar from "../img/avatar.png";
 import { useNavigate } from "react-router-dom";
 export default function FollowUser({ chat, user }) {
   const { recipinetUser } = useFetchRecipinet(chat, user);
@@ -13,15 +13,20 @@ export default function FollowUser({ chat, user }) {
           className="follow-user"
           onClick={() => navigate(`/user/${recipinetUser?._id}`)}
         >
-          <img
-            src={
-              recipinetUser?.Avatar
-                ? `${url}/users/avatar/${recipinetUser?._id}`
-                : avatar
-            }
-            alt=""
-          />
-          <p>{recipinetUser?.name}</p>
+          <div className="follow-img">
+            <img
+              src={
+                recipinetUser?.Avatar
+                  ? `${url}/users/avatar/${recipinetUser?._id}`
+                  : avatar
+              }
+              alt=""
+            />
+          </div>
+
+          <div className="follow-name">
+            <p className="wrap">{recipinetUser?.name}</p>
+          </div>
         </div>
       ) : (
         <>

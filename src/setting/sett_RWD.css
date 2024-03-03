@@ -1,6 +1,7 @@
 @media screen and (max-width:768px) {
  .follow-user img {
-    width: 60px;
+   
+   object-fit: cover;
  }
     .profile{
         flex-direction: column;
@@ -11,8 +12,11 @@
     .profile-img{
         margin: 0;
     }
+    .follow-user{
+        width: 70px;
+    }
 .follow-site{
     max-height: 300px;
-    overflow-y: auto;
+    
 }
 }

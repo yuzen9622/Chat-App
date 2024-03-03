@@ -156,19 +156,54 @@
 }
 .follow-site{
     display: flex;
-    padding: 5px;
     flex-wrap: wrap;
    justify-content: center;
 }
-.follow-user img{
-border-radius:15px;
-width: 100px;
-border: 2px solid rgb(239, 239, 239);
-}
-.follow-user{
+.follow-site {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .follow-user {
+    box-sizing: border-box;
+    flex: 0 0 calc(34.33% - 20px); /* Adjust the width as needed, considering margin and border */
     margin: 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    overflow: hidden;
+  }
+  
+  .follow-user:hover {
+    background-color: #f0f0f0;
+  }
+  .follow-img{
+    display: flex;
+    justify-content: center;
+   
+   
+  }
+  .follow-img img {
+    background-color:hsl(207, 91%, 85%);
+    width: 100%;
+    height: auto;
+    border-radius: 8px 8px 0 0; /* Rounded corners at the top */
+    object-fit: cover;
+  }
+  
+  .follow-name {
     padding: 5px;
-}
+  }
+  
+  .wrap {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    margin: 0;
+  }
+  
+
 /*gimmlier*/
 
 .glimmer-panel-profile {

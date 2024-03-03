@@ -30,7 +30,11 @@ function Chatlist() {
             <>
               <div
                 className="chat-list"
-                style={isMobile() ? { width: "100%", maxWidth: "none" } : ""}
+                style={
+                  isMobile()
+                    ? { width: "100%", maxWidth: "none", height: "95%" }
+                    : ""
+                }
               >
                 <div className="add">
                   <h3>message</h3>
