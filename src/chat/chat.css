@@ -325,9 +325,23 @@ font-size: 14px;
     padding: 5px;
     width: 100%;
     align-items: center;
+    justify-content: space-between;
 
 }
-
+.call{
+    display: flex;
+    align-items: center;
+}
+.call button{
+    border: none;
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+}
+.call i{
+    font-size: 16px;
+    color: rgb(0, 149, 246);
+}
 .chat-img {
     display: flex;
     justify-content: flex-end;

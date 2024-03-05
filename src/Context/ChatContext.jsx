@@ -4,13 +4,21 @@ import {
   useContext,
   useEffect,
   useState,
+  useRef,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import { io, emit, on, Socket } from "socket.io-client";
 import { url } from "../servirce";
+import * as process from "process";
+import Peer from "simple-peer";
+window.global = window;
+window.process = process;
+window.Buffer = [];
 
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children, user }) => {
+  const nagative = useNavigate();
   const [userChats, setUserChat] = useState(null);
   const [potentialChats, setPotentialChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -32,6 +40,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const [isHidden, setHidden] = useState(false);
   const [Typing, setTyping] = useState(false);
   const [typingUser, setTypingUser] = useState([]);
+
   useEffect(() => {
     const newSocket = io("https://chat-socket-97vj.onrender.com");
     setsocket(newSocket);
@@ -42,7 +51,7 @@ export const ChatContextProvider = ({ children, user }) => {
       });
       newSocket.off("disconnect");
     };
-  }, [user, isHidden]);
+  }, [user]);
 
   useEffect(() => {
     if (socket === null) return;
@@ -394,6 +403,151 @@ export const ChatContextProvider = ({ children, user }) => {
     getFriend();
   }, [UserProfile]);
 
+  /*call socket connection*/
+
+  const [userCall, setUserCall] = useState(false);
+  const [getCall, setGetCall] = useState(false);
+  const [callEnded, setCallEnded] = useState(false);
+  const [isOnCall, setIsOnCall] = useState(false);
+  const [callAccepted, setCallAccpected] = useState(false);
+  const [callerSignal, setCallSignal] = useState();
+  const [recpientName, setrecpientName] = useState("");
+  const [stream, setStream] = useState();
+  const [myid, setId] = useState(user?.id);
+  const [mysocket, setMysocket] = useState("");
+  const [idToCall, setIdToCall] = useState(null);
+  const [callType, setcallType] = useState(false);
+  const recpientVideo = useRef();
+  const connectionRef = useRef();
+
+  useEffect(() => {
+    console.log(onlineUser);
+    const mysocketId = onlineUser?.find((users) => users.userId === user.id);
+    setMysocket(mysocketId?.socketId);
+  }, [onlineUser]);
+  /*偵測有沒有電話*/
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("getCall", (data) => {
+      setGetCall(true);
+      setrecpientName(data.name);
+      getUserProfile(data.name, user.id);
+      console.log(data.iscamera);
+      setcallType(data.iscamera);
+
+      setCallSignal(data.signal);
+    });
+
+    socket.on("callEnded", () => {
+      setGetCall(false);
+      nagative("/chat");
+      setCallSignal();
+      setCallAccpected(false);
+      setCallSignal();
+      setrecpientName("");
+      connectionRef.current = null;
+      window.location.reload();
+      window.alert("對方拒絕");
+    });
+  }, [socket]);
+
+  /*撥打電話*/
+  useEffect(() => {
+    if (!socket || !idToCall) return;
+
+    setUserCall(true);
+    setrecpientName(idToCall);
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream: stream,
+    });
+    peer.on("signal", (data) => {
+      socket.emit("callUser", {
+        signalData: data,
+        from: mysocket,
+        name: myid,
+        id: idToCall,
+        iscamera: callType,
+      });
+    });
+    peer.on("stream", (stream) => {
+      if (stream) recpientVideo.current.srcObject = stream;
+    });
+
+    socket.on("callAccepted", (signal) => {
+      setIsOnCall(true);
+      setCallSignal(signal);
+      setCallAccpected(true);
+      setUserCall(false);
+      peer.signal(signal);
+    });
+
+    connectionRef.current = peer;
+  }, [socket, idToCall]);
+
+  const callUser = useCallback(async (id, openCamera = false) => {
+    getUserProfile(id, user.id);
+    let type = { video: false, audio: true };
+    if (openCamera) type = { video: true, audio: true };
+    await navigator.mediaDevices.getUserMedia(type).then((stream) => {
+      setStream(stream);
+    });
+    setcallType(openCamera);
+    setIdToCall(id);
+  }, []);
+  /*回應電話*/
+  useEffect(() => {
+    if (!socket || !callAccepted || userCall) return;
+    console.log(callerSignal);
+
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: stream,
+    });
+
+    peer.on("signal", (data) => {
+      socket.emit("answerCall", { signal: data, to: recpientName });
+    });
+
+    peer.on("stream", (stream) => {
+      if (stream) recpientVideo.current.srcObject = stream;
+    });
+
+    peer.signal(callerSignal);
+    connectionRef.current = peer;
+  }, [callAccepted]);
+
+  const anwserCall = useCallback(async (iscamera) => {
+    let type = { video: false, audio: true };
+    if (iscamera) type = { video: true, audio: true };
+    await navigator.mediaDevices.getUserMedia(type).then((stream) => {
+      setStream(stream);
+    });
+    setGetCall(false);
+    setIsOnCall(true);
+    setCallAccpected(true);
+  }, []);
+  /*離開電話*/
+  useEffect(() => {
+    if (!socket || !callEnded) return;
+    nagative("/chat");
+    setGetCall(false);
+    setIsOnCall(false);
+    setCallAccpected(false);
+    setCallSignal();
+    setUserProfile(null);
+    socket.emit("callend", recpientName);
+    connectionRef.current = null;
+    window.location.reload();
+  }, [socket, callEnded]);
+
+  const leaveCall = useCallback(() => {
+    setCallEnded(true);
+  }, []);
+
   return (
     <ChatContext.Provider
       value={{
@@ -427,6 +581,20 @@ export const ChatContextProvider = ({ children, user }) => {
         loading,
         updateTyping,
         typingUser,
+        socket,
+        recpientVideo,
+        userCall,
+        callUser,
+        leaveCall,
+        anwserCall,
+        callAccepted,
+        callEnded,
+        mysocket,
+        myid,
+        recpientName,
+        getCall,
+        callType,
+        isOnCall,
       }}
     >
       {children}

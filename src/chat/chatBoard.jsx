@@ -9,6 +9,7 @@ import "moment/locale/zh-tw";
 import { url } from "../servirce";
 import avarter from "../img/user.png";
 import { useNavigate } from "react-router-dom";
+
 function ChatBoard() {
   const {
     currentChat,
@@ -21,8 +22,12 @@ function ChatBoard() {
     SendLoading,
     updateTyping,
     typingUser,
+    callUser,
+    isOnCall,
+    recpientName,
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
+
   const [textmessage, setTextmessage] = useState("");
   const [repeatMsg, setRepeatMsg] = useState(null);
   const { recipinetUser, loading } = useFetchRecipinet(currentChat, user);
@@ -380,39 +385,79 @@ function ChatBoard() {
                         ""
                       )}
                       <div
-                        className="chat-img"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => navigate(`/user/${recipinetUser?._id}`)}
+                        className="chat-recipient"
+                        style={{ display: "flex" }}
                       >
-                        <img
-                          src={
-                            recipinetUser?.Avatar
-                              ? `${url}/users/avatar/${recipinetUser?._id}`
-                              : avarter
-                          }
-                          alt=""
-                        />
                         <div
-                          className={
-                            onlineUser?.some(
-                              (user) => user.userId === recipinetUser?._id
-                            )
-                              ? "online"
-                              : ""
+                          className="chat-img"
+                          style={{ cursor: "pointer" }}
+                          onClick={() =>
+                            navigate(`/user/${recipinetUser?._id}`)
                           }
-                        ></div>
+                        >
+                          <img
+                            src={
+                              recipinetUser?.Avatar
+                                ? `${url}/users/avatar/${recipinetUser?._id}`
+                                : avarter
+                            }
+                            alt=""
+                          />
+                          <div
+                            className={
+                              onlineUser?.some(
+                                (user) => user.userId === recipinetUser?._id
+                              )
+                                ? "online"
+                                : ""
+                            }
+                          ></div>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            cursor: "pointer",
+                          }}
+                          onClick={() =>
+                            navigate(`/user/${recipinetUser?._id}`)
+                          }
+                        >
+                          {" "}
+                          <h1>{recipinetUser.name}</h1>
+                          <pre>{spliceEmail(recipinetUser?.email)}</pre>
+                        </div>
                       </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => navigate(`/user/${recipinetUser?._id}`)}
-                      >
-                        {" "}
-                        <h1>{recipinetUser.name}</h1>
-                        <pre>{spliceEmail(recipinetUser?.email)}</pre>
+
+                      <div className="call">
+                        {isOnCall ? (
+                          recpientName == recipinetUser?._id ? (
+                            <button onClick={() => navigate("/view")}>
+                              返回電話
+                            </button>
+                          ) : (
+                            ""
+                          )
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => {
+                                callUser(recipinetUser?._id);
+                                navigate("/view");
+                              }}
+                            >
+                              <i class="fa-solid fa-phone"></i>
+                            </button>
+                            <button
+                              onClick={() => {
+                                callUser(recipinetUser?._id, true);
+                                navigate("/view");
+                              }}
+                            >
+                              <i class="fa-solid fa-video"></i>
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                     <div className="chat-main">
