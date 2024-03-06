@@ -31,6 +31,7 @@ export default function View() {
                   ref={recpientVideo}
                   autoPlay
                   controls
+                  playsInline
                   preload="metadata"
                 ></video>
 
@@ -38,6 +39,7 @@ export default function View() {
                   ref={userVideo}
                   autoPlay
                   controls
+                  playsInline
                   muted
                   preload="metadata"
                 ></video>
