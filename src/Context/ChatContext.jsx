@@ -418,6 +418,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const [idToCall, setIdToCall] = useState(null);
   const [callType, setcallType] = useState(false);
   const recpientVideo = useRef();
+  const userVideo = useRef();
   const connectionRef = useRef();
 
   useEffect(() => {
@@ -480,6 +481,8 @@ export const ChatContextProvider = ({ children, user }) => {
       setCallSignal(signal);
       setCallAccpected(true);
       setUserCall(false);
+      if (callType) userVideo.current.srcObject = stream;
+
       peer.signal(signal);
     });
 
@@ -515,7 +518,7 @@ export const ChatContextProvider = ({ children, user }) => {
     peer.on("stream", (stream) => {
       if (stream) recpientVideo.current.srcObject = stream;
     });
-
+    if (callType) userVideo.current.srcObject = stream;
     peer.signal(callerSignal);
     connectionRef.current = peer;
   }, [callAccepted]);
@@ -598,6 +601,7 @@ export const ChatContextProvider = ({ children, user }) => {
         getCall,
         callType,
         isOnCall,
+        userVideo,
       }}
     >
       {children}

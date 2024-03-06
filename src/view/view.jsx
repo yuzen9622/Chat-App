@@ -3,6 +3,7 @@ import "./view.css";
 import { ChatContext } from "../Context/ChatContext";
 import { url } from "../servirce";
 import avarter from "../img/user.png";
+import { AuthContext } from "../Context/AuthContext";
 export default function View() {
   const {
     recpientVideo,
@@ -14,35 +15,75 @@ export default function View() {
     getCall,
     callType,
     UserProfile,
+    userVideo,
   } = useContext(ChatContext);
+  const { user } = useContext(AuthContext);
   console.log(recpientVideo);
 
   return (
     <div>
-      {getCall && !callAccepted ? (
-        <button onClick={() => anwserCall(callType)}>接通</button>
-      ) : (
-        ""
-      )}
       <div className="call-view">
-        {callAccepted && !callEnded ? (
-          <div className="camera">
-            <video
-              style={{ width: "100%", minWidth: "300px" }}
-              ref={recpientVideo}
-              autoPlay
-              playsInline
-              controls
-            ></video>
-            <p>{UserProfile?.name}</p>
-            {!callEnded ? (
-              <>
-                <button onClick={() => leaveCall()}>離開</button>{" "}
-              </>
-            ) : (
-              ""
-            )}
-          </div>
+        {callAccepted && !callEnded && recpientVideo ? (
+          callType ? (
+            <>
+              <div className="camera">
+                <video
+                  ref={recpientVideo}
+                  autoPlay
+                  controls
+                  preload="metadata"
+                ></video>
+
+                <video
+                  ref={userVideo}
+                  autoPlay
+                  controls
+                  muted
+                  preload="metadata"
+                ></video>
+
+                {!callEnded ? (
+                  <>
+                    <button onClick={() => leaveCall()}>掛斷</button>
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
+            </>
+          ) : (
+            <div
+              className="camera"
+              style={{ display: "flex", flexDirection: "column" }}
+            >
+              <audio
+                hidden
+                ref={recpientVideo}
+                controls
+                autoPlay
+                preload="metadata"
+              ></audio>
+
+              <img
+                style={{ borderRadius: "50%", width: "150px" }}
+                src={
+                  UserProfile?.Avatar
+                    ? `${url}/users/avatar/${UserProfile._id}`
+                    : avarter
+                }
+                alt=""
+              />
+
+              <p>{UserProfile?.name}</p>
+              {!callEnded ? (
+                <>
+                  <button onClick={() => leaveCall()}>掛斷</button>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
+          )
         ) : userCall ? (
           <div className="view-profile">
             <img
@@ -54,18 +95,6 @@ export default function View() {
               alt=""
             />
             <p>正在撥打給{UserProfile?.name}...</p>
-          </div>
-        ) : getCall ? (
-          <div className="view-profile">
-            <img
-              src={
-                UserProfile?.Avatar
-                  ? `${url}/users/avatar/${UserProfile._id}`
-                  : avarter
-              }
-              alt=""
-            />
-            <p>{UserProfile?.name}打給你要接嗎</p>
           </div>
         ) : (
           ""
