@@ -422,7 +422,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
   useEffect(() => {
     console.log(onlineUser);
-    const mysocketId = onlineUser?.find((users) => users.userId === user.id);
+    const mysocketId = onlineUser?.find((users) => users?.userId === user?.id);
     setMysocket(mysocketId?.socketId);
   }, [onlineUser]);
   /*偵測有沒有電話*/
@@ -439,13 +439,13 @@ export const ChatContextProvider = ({ children, user }) => {
     });
 
     socket.on("callEnded", () => {
-      setGetCall(false);
-      nagative("/chat");
       setCallSignal();
       setCallAccpected(false);
       setCallSignal();
       setrecpientName("");
+      setGetCall(false);
       connectionRef.current = null;
+      nagative("/chat");
       window.location.reload();
       window.alert("對方拒絕");
     });
