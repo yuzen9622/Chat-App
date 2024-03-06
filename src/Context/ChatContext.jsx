@@ -430,12 +430,11 @@ export const ChatContextProvider = ({ children, user }) => {
     if (!socket) return;
 
     socket.on("getCall", (data) => {
-      setGetCall(true);
+      setcallType(data.iscamera);
       setrecpientName(data.name);
       getUserProfile(data.name, user.id);
+      setGetCall(true);
       console.log(data.iscamera);
-      setcallType(data.iscamera);
-
       setCallSignal(data.signal);
     });
 
@@ -493,8 +492,9 @@ export const ChatContextProvider = ({ children, user }) => {
     if (openCamera) type = { video: true, audio: true };
     await navigator.mediaDevices.getUserMedia(type).then((stream) => {
       setStream(stream);
+      setcallType(openCamera);
     });
-    setcallType(openCamera);
+
     setIdToCall(id);
   }, []);
   /*回應電話*/
@@ -522,14 +522,17 @@ export const ChatContextProvider = ({ children, user }) => {
 
   const anwserCall = useCallback(async (iscamera) => {
     let type = { video: false, audio: true };
+    console.log(iscamera);
     if (iscamera) type = { video: true, audio: true };
     await navigator.mediaDevices.getUserMedia(type).then((stream) => {
       setStream(stream);
     });
+
     setGetCall(false);
     setIsOnCall(true);
     setCallAccpected(true);
   }, []);
+
   /*離開電話*/
   useEffect(() => {
     if (!socket || !callEnded) return;
