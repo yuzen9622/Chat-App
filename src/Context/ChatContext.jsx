@@ -475,6 +475,13 @@ export const ChatContextProvider = ({ children, user }) => {
     });
 
     socket.on("callAccepted", (signal) => {
+      if (!signal) {
+        alert("對方不再線");
+        nagative("/chat");
+        window.location.reload();
+
+        return;
+      }
       setIsOnCall(true);
       setCallSignal(signal);
       setCallAccpected(true);
@@ -490,7 +497,9 @@ export const ChatContextProvider = ({ children, user }) => {
   const callUser = useCallback(async (id, openCamera = false) => {
     getUserProfile(id, user.id);
     let type = { video: false, audio: true };
+
     if (openCamera) type = { video: true, audio: true };
+
     await navigator.mediaDevices.getUserMedia(type).then((stream) => {
       setStream(stream);
       setcallType(openCamera);
