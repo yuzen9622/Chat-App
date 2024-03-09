@@ -146,7 +146,7 @@ function ChatBoard() {
                           {isOnCall ? (
                             recpientName == recipinetUser?._id ? (
                               <button onClick={() => navigate("/view")}>
-                                返回電話
+                                <i class="fa-solid fa-phone-volume"></i>
                               </button>
                             ) : (
                               ""
@@ -335,13 +335,15 @@ function ChatBoard() {
                             placeholder="Messages..."
                             value={textmessage}
                             onBlur={() => updateTyping(false)}
-                            onInput={(e) => {
-                              setTextmessage(e.target.value);
+                            onChange={() => {
                               updateTyping(true);
                               clearTimeout(typingTimeout);
                               typingTimeout = setTimeout(() => {
                                 updateTyping(false);
-                              }, 800);
+                              }, 1000);
+                            }}
+                            onInput={(e) => {
+                              setTextmessage(e.target.value);
                             }}
                           />
                         ) : (
@@ -469,7 +471,7 @@ function ChatBoard() {
                         {isOnCall ? (
                           recpientName == recipinetUser?._id ? (
                             <button onClick={() => navigate("/view")}>
-                              返回電話
+                              <i class="fa-solid fa-phone-volume"></i>
                             </button>
                           ) : (
                             ""

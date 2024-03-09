@@ -166,7 +166,7 @@
   
   .follow-user {
     box-sizing: border-box;
-    flex: 0 0 calc(34.33% - 20px); /* Adjust the width as needed, considering margin and border */
+    width: calc(30% - 20px);
     margin: 5px;
     cursor: pointer;
     border: 1px solid #ccc;

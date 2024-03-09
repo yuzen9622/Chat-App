@@ -40,6 +40,21 @@ export const ChatContextProvider = ({ children, user }) => {
   const [isHidden, setHidden] = useState(false);
   const [Typing, setTyping] = useState(false);
   const [typingUser, setTypingUser] = useState([]);
+  const [userCall, setUserCall] = useState(false);
+  const [getCall, setGetCall] = useState(false);
+  const [callEnded, setCallEnded] = useState(false);
+  const [isOnCall, setIsOnCall] = useState(false);
+  const [callAccepted, setCallAccpected] = useState(false);
+  const [callerSignal, setCallSignal] = useState();
+  const [recpientName, setrecpientName] = useState("");
+  const [stream, setStream] = useState();
+  const [myid, setId] = useState(user?.id);
+  const [mysocket, setMysocket] = useState("");
+  const [idToCall, setIdToCall] = useState(null);
+  const [callType, setcallType] = useState(false);
+  const recpientVideo = useRef();
+  const userVideo = useRef();
+  const connectionRef = useRef();
 
   useEffect(() => {
     const newSocket = io("https://chat-socket-97vj.onrender.com");
@@ -92,6 +107,8 @@ export const ChatContextProvider = ({ children, user }) => {
 
   useEffect(() => {
     const handleVisibilityChange = () => {
+      if (isOnCall) return;
+      if (!document.hidden && !isOnCall) window.location.reload();
       setHidden(document.hidden);
     };
 
@@ -100,7 +117,7 @@ export const ChatContextProvider = ({ children, user }) => {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [isOnCall]);
   useEffect(() => {
     if (socket === null) return;
 
@@ -405,24 +422,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
   /*call socket connection*/
 
-  const [userCall, setUserCall] = useState(false);
-  const [getCall, setGetCall] = useState(false);
-  const [callEnded, setCallEnded] = useState(false);
-  const [isOnCall, setIsOnCall] = useState(false);
-  const [callAccepted, setCallAccpected] = useState(false);
-  const [callerSignal, setCallSignal] = useState();
-  const [recpientName, setrecpientName] = useState("");
-  const [stream, setStream] = useState();
-  const [myid, setId] = useState(user?.id);
-  const [mysocket, setMysocket] = useState("");
-  const [idToCall, setIdToCall] = useState(null);
-  const [callType, setcallType] = useState(false);
-  const recpientVideo = useRef();
-  const userVideo = useRef();
-  const connectionRef = useRef();
-
   useEffect(() => {
-    console.log(onlineUser);
     const mysocketId = onlineUser?.find((users) => users?.userId === user?.id);
     setMysocket(mysocketId?.socketId);
   }, [onlineUser]);
@@ -435,7 +435,6 @@ export const ChatContextProvider = ({ children, user }) => {
       setrecpientName(data.name);
       getUserProfile(data.name, user.id);
       setGetCall(true);
-      console.log(data.iscamera);
       setCallSignal(data.signal);
     });
 
@@ -456,7 +455,6 @@ export const ChatContextProvider = ({ children, user }) => {
   useEffect(() => {
     if (!socket || !idToCall) return;
 
-    setUserCall(true);
     setrecpientName(idToCall);
     const peer = new Peer({
       initiator: true,
@@ -497,7 +495,7 @@ export const ChatContextProvider = ({ children, user }) => {
       setStream(stream);
       setcallType(openCamera);
     });
-
+    setUserCall(true);
     setIdToCall(id);
   }, []);
   /*回應電話*/
@@ -525,7 +523,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
   const anwserCall = useCallback(async (iscamera) => {
     let type = { video: false, audio: true };
-    console.log(iscamera);
+
     if (iscamera) type = { video: true, audio: true };
     await navigator.mediaDevices.getUserMedia(type).then((stream) => {
       setStream(stream);

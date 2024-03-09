@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
@@ -6,6 +6,7 @@ import ChatBoard from "./chatBoard";
 import Chatlist from "./chatlist";
 import "./chat.css";
 import "./RWD.css";
+
 import { ChatContext } from "../Context/ChatContext";
 
 function Chat() {
@@ -16,16 +17,17 @@ function Chat() {
 
   useEffect(() => {
     if (!getCall) return;
-    console.log(recpientName);
-    const recipient = allUsers?.find((user) => user._id === recpientName);
 
-    const userget = window.confirm(`來自${recipient?.name}的電話`);
-    if (userget) {
-      anwserCall(callType);
-      navgitave("/view");
-    } else {
-      leaveCall();
-    }
+    const recipient = allUsers?.find((user) => user._id === recpientName);
+    setTimeout(() => {
+      const userget = window.confirm(`來自${recipient?.name}的電話`);
+      if (userget) {
+        anwserCall(callType);
+        navgitave("/view");
+      } else {
+        leaveCall();
+      }
+    }, 1000);
   }, [getCall]);
 
   useEffect(() => {
