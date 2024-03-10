@@ -477,7 +477,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
     socket.on("callAccepted", (signal) => {
       const callsound = document.getElementById("calls");
-      callsound.volume = 0.0;
+      callsound.pause();
       if (!signal) {
         alert("對方不再線");
         nagative("/chat");
