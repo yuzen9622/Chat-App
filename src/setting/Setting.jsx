@@ -11,19 +11,7 @@ function Setting() {
   const navgitave = useNavigate();
   const { allUsers, getCall, callType, leaveCall, anwserCall, recpientName } =
     useContext(ChatContext);
-  useEffect(() => {
-    if (!getCall) return;
-    console.log(recpientName);
-    const recipient = allUsers?.find((user) => user._id === recpientName);
 
-    const userget = window.confirm(`來自${recipient?.name}的電話`);
-    if (userget) {
-      anwserCall(callType);
-      navgitave("/view");
-    } else {
-      leaveCall();
-    }
-  }, [getCall]);
   if (!user) window.location.replace("/");
   useEffect(() => {
     document.title = "個人資料";

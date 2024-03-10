@@ -3,22 +3,19 @@ import "./view.css";
 import { ChatContext } from "../Context/ChatContext";
 import { url } from "../servirce";
 import avarter from "../img/user.png";
-import { AuthContext } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 export default function View() {
   const {
     recpientVideo,
     userCall,
     leaveCall,
-    anwserCall,
     callAccepted,
     callEnded,
-    getCall,
     callType,
     UserProfile,
     userVideo,
   } = useContext(ChatContext);
-  const { user } = useContext(AuthContext);
-  console.log(recpientVideo);
 
   return (
     <div>
@@ -31,15 +28,12 @@ export default function View() {
                   ref={recpientVideo}
                   autoPlay
                   controls
-                  playsInline
                   preload="metadata"
                 ></video>
 
                 <video
                   ref={userVideo}
                   autoPlay
-                  controls
-                  playsInline
                   muted
                   preload="metadata"
                 ></video>

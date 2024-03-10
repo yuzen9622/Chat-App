@@ -9,7 +9,7 @@ import "moment/locale/zh-tw";
 import { url } from "../servirce";
 import avarter from "../img/user.png";
 import { useNavigate } from "react-router-dom";
-
+import call from "../audio/call.mp3";
 function ChatBoard() {
   const {
     currentChat,
@@ -24,6 +24,7 @@ function ChatBoard() {
     typingUser,
     callUser,
     isOnCall,
+
     recpientName,
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
@@ -38,18 +39,19 @@ function ChatBoard() {
   useEffect(() => {
     if (!loadingUser) scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentChat, messages, loadingUser]);
+
   useEffect(() => {
     setRepeatMsg(null);
   }, [currentChat, SendLoading]);
+
   const spliceEmail = (email) => {
     const mailId = email.split("@");
     const id = "@" + mailId[0];
     return id;
   };
-
   const dataTime = (firstTime, nextTime, PreviousTime) => {
     var firstmsg = new Date(firstTime);
-    let resultTime = null;
+
     let day = firstmsg.getDate();
     if (PreviousTime) {
       var Previousday = new Date(PreviousTime).getDate();
@@ -156,6 +158,7 @@ function ChatBoard() {
                               <button
                                 onClick={() => {
                                   callUser(recipinetUser?._id);
+                                  document.getElementById("calls").play();
                                   navigate("/view");
                                 }}
                               >
@@ -164,6 +167,7 @@ function ChatBoard() {
                               <button
                                 onClick={() => {
                                   callUser(recipinetUser?._id, true);
+                                  document.getElementById("calls").play();
                                   navigate("/view");
                                 }}
                               >
@@ -481,6 +485,7 @@ function ChatBoard() {
                             <button
                               onClick={() => {
                                 callUser(recipinetUser?._id);
+                                document.getElementById("calls").play();
                                 navigate("/view");
                               }}
                             >
@@ -489,6 +494,7 @@ function ChatBoard() {
                             <button
                               onClick={() => {
                                 callUser(recipinetUser?._id, true);
+                                document.getElementById("calls").play();
                                 navigate("/view");
                               }}
                             >

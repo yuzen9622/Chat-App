@@ -6,6 +6,7 @@ import ChatBoard from "./chatBoard";
 import Chatlist from "./chatlist";
 import "./chat.css";
 import "./RWD.css";
+import callsound from "../audio/callsound.mp3";
 
 import { ChatContext } from "../Context/ChatContext";
 
@@ -16,16 +17,21 @@ function Chat() {
     useContext(ChatContext);
 
   useEffect(() => {
+    const callsound = document.getElementById("soundcall");
+    callsound.volume = 0.0;
     if (!getCall) return;
-
+    callsound.volume = 1.0;
+    callsound.play();
     const recipient = allUsers?.find((user) => user._id === recpientName);
     setTimeout(() => {
       const userget = window.confirm(`來自${recipient?.name}的電話`);
       if (userget) {
         anwserCall(callType);
         navgitave("/view");
+        callsound.volume = 0.0;
       } else {
         leaveCall();
+        callsound.volume = 0.0;
       }
     }, 1000);
   }, [getCall]);
@@ -39,6 +45,7 @@ function Chat() {
 
   return (
     <>
+      <audio loop src={callsound} id="soundcall"></audio>
       <div className="chat">
         <Chatlist />
         <ChatBoard />

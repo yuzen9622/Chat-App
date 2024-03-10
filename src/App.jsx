@@ -8,11 +8,11 @@ import { useContext } from "react";
 import { AuthContext } from "./Context/AuthContext";
 import Navbar from "./navbar/Navbar";
 import { ChatContext, ChatContextProvider } from "./Context/ChatContext";
-import { CallContextProvider } from "./Context/CallContext";
 import Setting from "./setting/Setting";
 import EditProfile from "./setting/Edit-Profile";
 import UserProfile from "./setting/UserProfile";
 import View from "./view/view";
+import call from "./audio/call.mp3";
 function App() {
   const { user } = useContext(AuthContext);
 
@@ -24,6 +24,7 @@ function App() {
 
   return (
     <div className="App">
+      <audio id="calls" loop src={call}></audio>
       <ChatContextProvider user={user}>
         <Navbar />
         <Routes>

@@ -4,19 +4,27 @@ import { AuthContext } from "../Context/AuthContext";
 import { url } from "../servirce";
 import chat from "../img/chat.png";
 import { useNavigate } from "react-router-dom";
+import avatar from "../img/user.png";
+
 function Sign() {
   const navigate = useNavigate();
   const { signInfo, updateSignInfo } = useContext(AuthContext);
   const [signStatus, setSignStatus] = useState("");
   const [isSign, setIsSign] = useState(false);
-
+  const [Avatar, setAvatar] = useState(null);
   const sign = (e) => {
     setIsSign(true);
+    var formData = new FormData();
+    formData.append("name", signInfo.name);
+    formData.append("email", signInfo.email);
+    formData.append("password", signInfo.password);
+    formData.append("img", Avatar);
+
     e.preventDefault();
-    fetch(`${url}/users/register`, {
+    fetch(`http://localhost:5000/users/register`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(signInfo),
+
+      body: formData,
     })
       .then((res) => res.json())
       .then((data) => {
@@ -31,19 +39,55 @@ function Sign() {
             bio: data.bio,
           };
           localStorage.setItem("User", JSON.stringify(datas));
+          navigate("/");
+          window.location.reload();
         } else {
           setSignStatus(data);
         }
-        navigate("/");
-        window.location.reload();
+
         setIsSign(false);
       });
   };
 
+  function createAvatar() {
+    var input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/png, image/jpeg";
+    input.addEventListener("change", (e) => {
+      setAvatar(e.target.files[0]);
+      updateSignInfo({ ...signInfo, img: e.target.files[0] });
+    });
+    input.click();
+  }
   return (
     <div className="sign">
-      <img src={chat} alt="" width={"50px"} />
       <h3>Register</h3>
+
+      <div className="user" style={{ position: "relative" }}>
+        <img
+          src={Avatar ? URL.createObjectURL(Avatar) : avatar}
+          alt=""
+          style={{ width: "80px", borderRadius: "50%", height: "80px" }}
+        />
+        <button
+          style={{
+            width: "30px",
+            height: "30px",
+            minWidth: "0",
+            position: "absolute",
+            backgroundColor: "#aaa",
+
+            top: "60%",
+            left: "53%",
+            margin: "0",
+            borderRadius: "50%",
+            color: "white",
+          }}
+          onClick={createAvatar}
+        >
+          <i class="fa-solid fa-camera"></i>
+        </button>
+      </div>
       <form onSubmit={sign}>
         <div className="user">
           <input

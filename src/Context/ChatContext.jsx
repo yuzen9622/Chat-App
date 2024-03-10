@@ -427,6 +427,7 @@ export const ChatContextProvider = ({ children, user }) => {
     setMysocket(mysocketId?.socketId);
   }, [onlineUser]);
   /*偵測有沒有電話*/
+
   useEffect(() => {
     if (!socket) return;
 
@@ -479,7 +480,6 @@ export const ChatContextProvider = ({ children, user }) => {
         alert("對方不再線");
         nagative("/chat");
         window.location.reload();
-
         return;
       }
       setIsOnCall(true);
@@ -507,6 +507,7 @@ export const ChatContextProvider = ({ children, user }) => {
     setUserCall(true);
     setIdToCall(id);
   }, []);
+
   /*回應電話*/
   useEffect(() => {
     if (!socket || !callAccepted || userCall) return;

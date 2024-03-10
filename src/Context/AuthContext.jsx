@@ -15,8 +15,9 @@ export const AuthContextProvider = ({ children }) => {
     name: "",
     email: "",
     password: "",
+    img: null,
   });
-
+  console.log(signInfo);
   const updateSignInfo = useCallback((info) => {
     setSignInfo(info);
   }, []);
