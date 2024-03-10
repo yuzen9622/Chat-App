@@ -476,16 +476,20 @@ export const ChatContextProvider = ({ children, user }) => {
     });
 
     socket.on("callAccepted", (signal) => {
+      const callsound = document.getElementById("calls");
+      callsound.volume = 0.0;
       if (!signal) {
         alert("對方不再線");
         nagative("/chat");
         window.location.reload();
         return;
       }
+
       setIsOnCall(true);
       setCallSignal(signal);
       setCallAccpected(true);
       setUserCall(false);
+
       if (callType) userVideo.current.srcObject = stream;
 
       peer.signal(signal);
@@ -511,7 +515,6 @@ export const ChatContextProvider = ({ children, user }) => {
   /*回應電話*/
   useEffect(() => {
     if (!socket || !callAccepted || userCall) return;
-    console.log(callerSignal);
 
     const peer = new Peer({
       initiator: false,

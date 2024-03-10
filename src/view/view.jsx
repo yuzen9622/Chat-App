@@ -28,12 +28,14 @@ export default function View() {
                   ref={recpientVideo}
                   autoPlay
                   controls
+                  playsInline
                   preload="metadata"
                 ></video>
 
                 <video
                   ref={userVideo}
                   autoPlay
+                  playsInline
                   muted
                   preload="metadata"
                 ></video>

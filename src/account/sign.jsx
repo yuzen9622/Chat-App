@@ -21,7 +21,7 @@ function Sign() {
     formData.append("img", Avatar);
 
     e.preventDefault();
-    fetch(`http://localhost:5000/users/register`, {
+    fetch(`${url}/users/register`, {
       method: "POST",
 
       body: formData,
