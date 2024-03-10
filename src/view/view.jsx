@@ -29,7 +29,7 @@ export default function View() {
                   autoPlay
                   controls
                   playsInline
-                  preload="metadata"
+                  preload="none"
                 ></video>
 
                 <video
@@ -37,7 +37,7 @@ export default function View() {
                   autoPlay
                   playsInline
                   muted
-                  preload="metadata"
+                  preload="none"
                 ></video>
 
                 {!callEnded ? (
