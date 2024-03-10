@@ -518,7 +518,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
     const peer = new Peer({
       initiator: false,
-      trickle: true,
+      trickle: false,
       stream: stream,
     });
 
