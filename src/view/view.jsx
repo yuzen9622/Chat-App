@@ -59,7 +59,7 @@ export default function View() {
                 ref={recpientVideo}
                 controls
                 autoPlay
-                preload="metadata"
+                preload="none"
               ></audio>
 
               <img

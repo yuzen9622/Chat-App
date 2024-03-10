@@ -459,7 +459,7 @@ export const ChatContextProvider = ({ children, user }) => {
     setrecpientName(idToCall);
     const peer = new Peer({
       initiator: true,
-      trickle: false,
+      trickle: true,
       stream: stream,
     });
     peer.on("signal", (data) => {
@@ -518,7 +518,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
     const peer = new Peer({
       initiator: false,
-      trickle: false,
+      trickle: true,
       stream: stream,
     });
 
