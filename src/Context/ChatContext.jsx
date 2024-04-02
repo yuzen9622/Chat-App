@@ -246,6 +246,7 @@ export const ChatContextProvider = ({ children, user }) => {
                 text: textmessage,
                 isRead: isRead,
                 repeatmsg: repeatmsg,
+                type: "text",
               }),
               headers: { "Content-Type": "application/json" },
             })
