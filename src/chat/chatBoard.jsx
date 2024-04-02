@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useContext } from "react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ChatContext } from "../Context/ChatContext";
 import { AuthContext } from "../Context/AuthContext";
 import { useFetchRecipinet, useFetchLastMessage } from "../api/api";
@@ -9,7 +10,7 @@ import "moment/locale/zh-tw";
 import { url } from "../servirce";
 import avarter from "../img/user.png";
 import { useNavigate } from "react-router-dom";
-
+import imgLoad from "../img/imgLoad.jpg";
 function ChatBoard() {
   const {
     currentChat,
@@ -31,6 +32,7 @@ function ChatBoard() {
   const [textmessage, setTextmessage] = useState("");
   const [repeatMsg, setRepeatMsg] = useState(null);
   const [pic, setPic] = useState(null);
+
   const { recipinetUser, loading } = useFetchRecipinet(currentChat, user);
   const scroll = useRef();
   const { lastestMessage } = useFetchLastMessage(currentChat);
@@ -110,10 +112,10 @@ function ChatBoard() {
             <i style={{ fontSize: "20px" }} class="fa-solid fa-xmark"></i>
           </button>
           <div className="img">
-            <img
+            <LazyLoadImage
               ref={imgRef}
               src={`${url}/msg/img/${pic}`}
-              alt=""
+              alt="img"
               style={{
                 aspectRatio:
                   imgRef.current?.naturalWidth / imgRef.current?.naturalHeight,
@@ -161,13 +163,13 @@ function ChatBoard() {
                               navigate(`/user/${recipinetUser?._id}`)
                             }
                           >
-                            <img
+                            <LazyLoadImage
                               src={
                                 recipinetUser?.Avatar
                                   ? `${url}/users/avatar/${recipinetUser?._id}`
                                   : avarter
                               }
-                              alt=""
+                              alt="img"
                             />
                             <div
                               className={
@@ -659,9 +661,9 @@ function ChatBoard() {
                                   >
                                     {message.text == "" ? (
                                       <span className="img">
-                                        <img
+                                        <LazyLoadImage
                                           src={`${url}/msg/img/${message?._id}`}
-                                          alt=""
+                                          alt="img"
                                           style={{
                                             maxWidth: "200px",
                                             aspectRatio: message?.aspectRatio,
@@ -701,15 +703,22 @@ function ChatBoard() {
                                         setPic(`${message?._id}`);
                                       }}
                                     >
-                                      <img
-                                        src={`${url}/msg/img/${message?._id}`}
-                                        alt=""
-                                        style={{
-                                          maxWidth: "200px",
-                                          aspectRatio: message?.aspectRatio,
-                                          borderRadius: "5px",
-                                        }}
-                                      />
+                                      {message?.img ? (
+                                        <LazyLoadImage
+                                          src={`${url}/msg/img/${message?._id}`}
+                                          alt="img"
+                                          id="img"
+                                          ref={imgRef}
+                                          style={{
+                                            maxWidth: "200px",
+                                            aspectRatio: message?.aspectRatio,
+                                            borderRadius: "5px",
+                                          }}
+                                          effect="blur"
+                                        />
+                                      ) : (
+                                        "照片"
+                                      )}
                                     </span>
                                   ) : (
                                     <div className="message">
