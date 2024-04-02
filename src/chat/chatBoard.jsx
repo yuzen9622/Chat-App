@@ -297,7 +297,7 @@ function ChatBoard() {
                                             src={`${url}/msg/img/${message?._id}`}
                                             alt=""
                                             style={{
-                                              maxWidth: "300px",
+                                              maxWidth: "200px",
                                               aspectRatio: message?.aspectRatio,
                                               borderRadius: "5px",
                                             }}
@@ -339,7 +339,7 @@ function ChatBoard() {
                                           src={`${url}/msg/img/${message?._id}`}
                                           alt=""
                                           style={{
-                                            maxWidth: "300px",
+                                            maxWidth: "200px",
                                             aspectRatio: message?.aspectRatio,
                                             borderRadius: "5px",
                                           }}
@@ -663,7 +663,7 @@ function ChatBoard() {
                                           src={`${url}/msg/img/${message?._id}`}
                                           alt=""
                                           style={{
-                                            maxWidth: "300px",
+                                            maxWidth: "200px",
                                             aspectRatio: message?.aspectRatio,
                                             borderRadius: "5px",
                                           }}
@@ -705,7 +705,7 @@ function ChatBoard() {
                                         src={`${url}/msg/img/${message?._id}`}
                                         alt=""
                                         style={{
-                                          maxWidth: "300px",
+                                          maxWidth: "200px",
                                           aspectRatio: message?.aspectRatio,
                                           borderRadius: "5px",
                                         }}
