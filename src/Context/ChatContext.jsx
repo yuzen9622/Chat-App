@@ -224,21 +224,35 @@ export const ChatContextProvider = ({ children, user }) => {
   });
 
   const sendMessage = useCallback(
-    async (textmessage, sender, currentChatId, isRead, repeatmsg) => {
+    async (
+      textmessage,
+      sender,
+      currentChatId,
+      isRead,
+      repeatmsg,
+      type = true,
+      formData
+    ) => {
       if (!textmessage) return null;
       try {
         setSendLoading(true);
-        const response = await fetch(`${url}/msg`, {
-          method: "POST",
-          body: JSON.stringify({
-            chatId: currentChatId,
-            senderId: sender.id,
-            text: textmessage,
-            isRead: isRead,
-            repeatmsg: repeatmsg,
-          }),
-          headers: { "Content-Type": "application/json" },
-        });
+
+        const response = type
+          ? await fetch(`${url}/msg`, {
+              method: "POST",
+              body: JSON.stringify({
+                chatId: currentChatId,
+                senderId: sender.id,
+                text: textmessage,
+                isRead: isRead,
+                repeatmsg: repeatmsg,
+              }),
+              headers: { "Content-Type": "application/json" },
+            })
+          : await fetch(`${url}/msg`, {
+              method: "POST",
+              body: formData,
+            });
         const data = await response.json();
         setNewMessage(data);
         setMessages((prev) => [...prev, data]);
@@ -522,7 +536,6 @@ export const ChatContextProvider = ({ children, user }) => {
       trickle: true,
       stream: stream,
     });
-
     peer.on("signal", (data) => {
       socket.emit("answerCall", { signal: data, to: recpientName });
     });
@@ -551,6 +564,7 @@ export const ChatContextProvider = ({ children, user }) => {
   /*離開電話*/
   useEffect(() => {
     if (!socket || !callEnded) return;
+    connectionRef.current.destroy();
     nagative("/chat");
     setGetCall(false);
     setIsOnCall(false);

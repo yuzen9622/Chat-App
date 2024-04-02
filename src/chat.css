@@ -270,6 +270,7 @@
 }
 
 .text-input {
+  
     border: 1px solid #aaa;
 
 }
@@ -343,6 +344,7 @@
     font-weight: 600;
     max-width: 200px;
     word-wrap: break-word;
+    white-space: pre-wrap;
 
 }
 

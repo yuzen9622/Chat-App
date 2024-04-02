@@ -275,15 +275,16 @@ font-size: 14px;
 }
 
 .text-input {
+   
     border: 1px solid #aaa;
 
 }
 
-.chat-input input {
+.chat-input textarea {
     width: 95%;
     border-radius: 25px;
     font-size: 16px;
-    margin-right: 5px;
+height: 10px;
 
 }
 
@@ -296,6 +297,7 @@ font-size: 14px;
 .tool{
     display: none;
     padding: 5px;
+    height: 100%;
 }
 .tool button{
     border: none;
@@ -445,6 +447,7 @@ font-size: 14px;
     font-weight: 600;
     max-width: 200px;
     word-wrap: break-word;
+    white-space: pre-wrap;
 
 }
 
@@ -737,4 +740,51 @@ form {
     font-size: 13px;
     font-weight: bold;
    color:rgb(101, 103, 107);
+}
+/*imgBtn*/
+.img-btn{
+    padding: 5px;
+    font-size: 18px;
+ 
+}
+.img-btn i{
+    color: #8b8181;
+}
+.react-input-emoji--input{
+width: 100%;
+}
+.pic{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+    z-index: 5;
+    border-radius: 5px;
+    background-color: hsl(0, 3%, 71%);
+   
+}
+.pic button{
+    background-color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin: 5px 0;
+}
+.pic .img{
+    overflow-y: auto;
+    max-width: 500px;
+    min-width: 350px;
+    width: 60%;
+    max-height: 500px;
+    border-radius: 5px;
+}
+.pic img{
+   
+    width: 100%;
 }

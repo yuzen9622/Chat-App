@@ -9,7 +9,7 @@ import "moment/locale/zh-tw";
 import { url } from "../servirce";
 import avarter from "../img/user.png";
 import { useNavigate } from "react-router-dom";
-import call from "../audio/call.mp3";
+
 function ChatBoard() {
   const {
     currentChat,
@@ -24,16 +24,15 @@ function ChatBoard() {
     typingUser,
     callUser,
     isOnCall,
-
     recpientName,
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
-
+  const imgRef = useRef();
   const [textmessage, setTextmessage] = useState("");
   const [repeatMsg, setRepeatMsg] = useState(null);
+  const [pic, setPic] = useState(null);
   const { recipinetUser, loading } = useFetchRecipinet(currentChat, user);
   const scroll = useRef();
-
   const { lastestMessage } = useFetchLastMessage(currentChat);
   const navigate = useNavigate();
   useEffect(() => {
@@ -68,13 +67,64 @@ function ChatBoard() {
       return nextday > day ? firstTime : null;
     }
   };
+
   const continueFoucs = () => {
     const input = document.getElementById("text-input");
     if (input) input.focus();
   };
+  const imgBtnClick = () => {
+    let input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+
+    input.addEventListener("change", async (e) => {
+      let selectedFile = e.target.files[0];
+      let imgData = new FormData();
+      imgData.append("img", selectedFile);
+      imgData.append("chatId", currentChat._id);
+      imgData.append("senderId", user.id);
+      imgData.append("isRead", false);
+
+      imgData.append("type", "img");
+      imgData.append("text", "");
+
+      sendMessage(
+        true,
+        user,
+        currentChat._id,
+        false,
+        repeatMsg,
+        false,
+        imgData
+      );
+    });
+    input.click();
+  };
+
   let typingTimeout;
   return (
     <>
+      {pic ? (
+        <div className="pic">
+          <button onClick={() => setPic(null)} style={{ border: "none" }}>
+            <i style={{ fontSize: "20px" }} class="fa-solid fa-xmark"></i>
+          </button>
+          <div className="img">
+            <img
+              ref={imgRef}
+              src={`${url}/msg/img/${pic}`}
+              alt=""
+              style={{
+                aspectRatio:
+                  imgRef.current?.naturalWidth / imgRef.current?.naturalHeight,
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+
       {isMobile() ? (
         currentChat ? (
           <>
@@ -241,11 +291,25 @@ function ChatBoard() {
                                             }
                                       }
                                     >
-                                      <div className="message">
-                                        <span className="text">
-                                          {message.text}
+                                      {message.text == "" ? (
+                                        <span className="img">
+                                          <img
+                                            src={`${url}/msg/img/${message?._id}`}
+                                            alt=""
+                                            style={{
+                                              maxWidth: "300px",
+                                              aspectRatio: message?.aspectRatio,
+                                              borderRadius: "5px",
+                                            }}
+                                          />
                                         </span>
-                                      </div>
+                                      ) : (
+                                        <div className="message">
+                                          <span className="text">
+                                            {message.text}
+                                          </span>
+                                        </div>
+                                      )}
                                       <div className="time">
                                         <div className="time">
                                           {message?.senderId === user.id &&
@@ -264,11 +328,30 @@ function ChatBoard() {
                                   </div>
                                 ) : (
                                   <>
-                                    <div className="message">
-                                      <span className="text">
-                                        {message.text}
+                                    {message.text == "" ? (
+                                      <span
+                                        className="img"
+                                        onClick={() => {
+                                          setPic(`${message?._id}`);
+                                        }}
+                                      >
+                                        <img
+                                          src={`${url}/msg/img/${message?._id}`}
+                                          alt=""
+                                          style={{
+                                            maxWidth: "300px",
+                                            aspectRatio: message?.aspectRatio,
+                                            borderRadius: "5px",
+                                          }}
+                                        />
                                       </span>
-                                    </div>
+                                    ) : (
+                                      <div className="message">
+                                        <span className="text">
+                                          {message.text}
+                                        </span>
+                                      </div>
+                                    )}
                                     <div className="time">
                                       <div className="time">
                                         {message?.senderId === user.id &&
@@ -319,7 +402,7 @@ function ChatBoard() {
                                 : recipinetUser?.name}
                             </p>
                             <button onClick={() => setRepeatMsg(null)}>
-                              x
+                              <i class="fa-solid fa-xmark"></i>
                             </button>
                           </div>
                           <span>
@@ -331,8 +414,11 @@ function ChatBoard() {
                       )}
 
                       <div className="chat-input">
+                        <button onClick={imgBtnClick} className="img-btn">
+                          <i class="fa-solid fa-image"></i>
+                        </button>
                         {isMobile() ? (
-                          <input
+                          <textarea
                             type="text"
                             id="text-input"
                             className="react-input-emoji--input text-input"
@@ -404,7 +490,6 @@ function ChatBoard() {
       ) : (
         /**電腦版 **/
         <>
-          {" "}
           {!recipinetUser ? (
             <p style={{ textAlign: "center", width: "100%" }}>
               No conversation yet...
@@ -536,7 +621,8 @@ function ChatBoard() {
                               }`}
                               key={index}
                             >
-                              {message?.repeatMsg ? (
+                              {message?.repeatMsg != "null" &&
+                              message?.repeatMsg ? (
                                 <div className="repeat-msg">
                                   <div className="repeat-user">
                                     <span>
@@ -571,11 +657,25 @@ function ChatBoard() {
                                           }
                                     }
                                   >
-                                    <div className="message">
-                                      <span className="text">
-                                        {message.text}
+                                    {message.text == "" ? (
+                                      <span className="img">
+                                        <img
+                                          src={`${url}/msg/img/${message?._id}`}
+                                          alt=""
+                                          style={{
+                                            maxWidth: "300px",
+                                            aspectRatio: message?.aspectRatio,
+                                            borderRadius: "5px",
+                                          }}
+                                        />
                                       </span>
-                                    </div>
+                                    ) : (
+                                      <div className="message">
+                                        <span className="text">
+                                          {message.text}
+                                        </span>
+                                      </div>
+                                    )}
                                     <div className="time">
                                       <div className="time">
                                         {message?.senderId === user.id &&
@@ -594,9 +694,30 @@ function ChatBoard() {
                                 </div>
                               ) : (
                                 <>
-                                  <div className="message">
-                                    <span className="text">{message.text}</span>
-                                  </div>
+                                  {message.text == "" ? (
+                                    <span
+                                      className="img"
+                                      onClick={() => {
+                                        setPic(`${message?._id}`);
+                                      }}
+                                    >
+                                      <img
+                                        src={`${url}/msg/img/${message?._id}`}
+                                        alt=""
+                                        style={{
+                                          maxWidth: "300px",
+                                          aspectRatio: message?.aspectRatio,
+                                          borderRadius: "5px",
+                                        }}
+                                      />
+                                    </span>
+                                  ) : (
+                                    <div className="message">
+                                      <span className="text">
+                                        {message.text}
+                                      </span>
+                                    </div>
+                                  )}
                                   <div className="time">
                                     <div className="time">
                                       {message?.senderId === user.id &&
@@ -646,7 +767,9 @@ function ChatBoard() {
                               ? "自己"
                               : recipinetUser?.name}
                           </p>
-                          <button onClick={() => setRepeatMsg(null)}>x</button>
+                          <button onClick={() => setRepeatMsg(null)}>
+                            <i class="fa-solid fa-xmark"></i>
+                          </button>
                         </div>
                         <span>
                           <p>{repeatMsg?.text}</p>
@@ -657,6 +780,9 @@ function ChatBoard() {
                     )}
 
                     <div className="chat-input">
+                      <button onClick={imgBtnClick} className="img-btn">
+                        <i class="fa-solid fa-image"></i>
+                      </button>
                       {isMobile() ? (
                         <input
                           type="text"
