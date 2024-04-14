@@ -10,7 +10,7 @@ import "moment/locale/zh-tw";
 import { url } from "../servirce";
 import avarter from "../img/user.png";
 import { useNavigate } from "react-router-dom";
-import imgLoad from "../img/imgLoad.jpg";
+import loadImg from "../img/imgLoad.jpg";
 function ChatBoard() {
   const {
     currentChat,
@@ -26,20 +26,69 @@ function ChatBoard() {
     callUser,
     isOnCall,
     recpientName,
+    getlimitMsg,
+    loadingMsg,
+    limitMsg,
+    msgCount,
   } = useContext(ChatContext);
+
   const { user } = useContext(AuthContext);
-  const imgRef = useRef();
+  const { recipinetUser, loading } = useFetchRecipinet(currentChat, user);
+  const { lastestMessage } = useFetchLastMessage(currentChat);
+
   const [textmessage, setTextmessage] = useState("");
   const [repeatMsg, setRepeatMsg] = useState(null);
   const [pic, setPic] = useState(null);
-
-  const { recipinetUser, loading } = useFetchRecipinet(currentChat, user);
+  const [limit, setLimit] = useState(20);
   const scroll = useRef();
-  const { lastestMessage } = useFetchLastMessage(currentChat);
+  const imgRef = useRef();
+  const chatHeight = useRef();
   const navigate = useNavigate();
+
   useEffect(() => {
-    if (!loadingUser) scroll.current?.scrollIntoView({ behavior: "smooth" });
-  }, [currentChat, messages, loadingUser]);
+    if (!loadingUser && limitMsg === 20) {
+      scroll.current?.scrollIntoView({ behavior: "instant" });
+    }
+  }, [currentChat, messages, loadingUser, limitMsg]);
+  useEffect(() => {
+    setLimit(20);
+  }, [currentChat]);
+  useEffect(() => {
+    const getNewMsg = () => {
+      if (limit >= msgCount) return;
+      const scrollTop = chatHeight.current?.scrollTop;
+      if (scrollTop === 0) {
+        setTimeout(() => {
+          setLimit((prev) => prev + 10);
+        }, 500);
+      }
+    };
+
+    const handleScroll = () => {
+      getNewMsg();
+    };
+
+    const chatMain = document.querySelector(".chat-main");
+    if (chatMain && !loadingUser && !loadingMsg) {
+      chatMain.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (chatMain) {
+        chatMain.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [currentChat, loadingUser, loadingMsg, msgCount]);
+
+  useEffect(() => {
+    console.log(limit, msgCount);
+    if (limit === 20) return;
+
+    getlimitMsg(limit);
+  }, [limit, msgCount]);
+
+  useEffect(() => {
+    if (!loadingMsg && limitMsg !== 20) chatHeight.current?.scrollTo(0, 100);
+  }, [loadingMsg]);
 
   useEffect(() => {
     setRepeatMsg(null);
@@ -50,13 +99,14 @@ function ChatBoard() {
     const id = "@" + mailId[0];
     return id;
   };
+
   const dataTime = (firstTime, nextTime, PreviousTime) => {
     var firstmsg = new Date(firstTime);
 
     let day = firstmsg.getDate();
     if (PreviousTime) {
       var Previousday = new Date(PreviousTime).getDate();
-      if (Previousday == day) return null;
+      if (Previousday === day) return null;
       if (Previousday < day) return firstTime;
     } else {
       return firstTime;
@@ -65,7 +115,7 @@ function ChatBoard() {
       var nextmsg = new Date(firstTime);
       var nextday = nextmsg.getDate();
       console.log(nextTime, firstTime);
-      if (nextday == day) return null;
+      if (nextday === day) return null;
       return nextday > day ? firstTime : null;
     }
   };
@@ -112,14 +162,15 @@ function ChatBoard() {
             <i style={{ fontSize: "20px" }} class="fa-solid fa-xmark"></i>
           </button>
           <div className="img">
-            <LazyLoadImage
+            <img
+              className=""
               ref={imgRef}
-              src={`${url}/msg/img/${pic}`}
+              src={`${url}/msg/${pic}`}
               alt="img"
-              style={{
-                aspectRatio:
-                  imgRef.current?.naturalWidth / imgRef.current?.naturalHeight,
-              }}
+              onLoad={(e) =>
+                (e.currentTarget.style.aspectRatio =
+                  imgRef.current?.natureWidth / imgRef.current?.natureHeight)
+              }
             />
           </div>
         </div>
@@ -198,7 +249,7 @@ function ChatBoard() {
                         </div>
                         <div className="call">
                           {isOnCall ? (
-                            recpientName == recipinetUser?._id ? (
+                            recpientName === recipinetUser?._id ? (
                               <button onClick={() => navigate("/view")}>
                                 <i class="fa-solid fa-phone-volume"></i>
                               </button>
@@ -229,7 +280,21 @@ function ChatBoard() {
                           )}
                         </div>
                       </div>
-                      <div className="chat-main">
+                      <div className="chat-main" ref={chatHeight}>
+                        <div
+                          style={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {loadingMsg && (
+                            <div
+                              style={{ width: "20px" }}
+                              className="loader"
+                            ></div>
+                          )}
+                        </div>
                         {messages &&
                           messages.map((message, index, array) => (
                             <>
@@ -253,7 +318,6 @@ function ChatBoard() {
                                 ""
                               )}
                               <div
-                                ref={scroll}
                                 className={`${
                                   message?.senderId === user.id
                                     ? "user-message"
@@ -293,10 +357,10 @@ function ChatBoard() {
                                             }
                                       }
                                     >
-                                      {message.text == "" ? (
+                                      {message.text === "" ? (
                                         <span className="img">
                                           <img
-                                            src={`${url}/msg/img/${message?._id}`}
+                                            src={`${url}/msg/${message?._id}`}
                                             alt=""
                                             style={{
                                               maxWidth: "200px",
@@ -330,7 +394,7 @@ function ChatBoard() {
                                   </div>
                                 ) : (
                                   <>
-                                    {message.text == "" ? (
+                                    {message.text === "" ? (
                                       <span
                                         className="img"
                                         onClick={() => {
@@ -338,7 +402,7 @@ function ChatBoard() {
                                         }}
                                       >
                                         <img
-                                          src={`${url}/msg/img/${message?._id}`}
+                                          src={`${url}/msg/${message?._id}`}
                                           alt=""
                                           style={{
                                             maxWidth: "200px",
@@ -393,6 +457,11 @@ function ChatBoard() {
                         ) : (
                           ""
                         )}
+                        <div
+                          className="footer"
+                          style={{ height: "1px" }}
+                          ref={scroll}
+                        ></div>
                       </div>
                       {repeatMsg ? (
                         <div className="repeat">
@@ -460,7 +529,9 @@ function ChatBoard() {
 
                         {textmessage && (
                           <button
-                            className={textmessage == "" ? "btn" : "btn istext"}
+                            className={
+                              textmessage === "" ? "btn" : "btn istext"
+                            }
                             type="button"
                             onClick={(e) => {
                               sendMessage(
@@ -560,7 +631,7 @@ function ChatBoard() {
 
                       <div className="call">
                         {isOnCall ? (
-                          recpientName == recipinetUser?._id ? (
+                          recpientName === recipinetUser?._id ? (
                             <button onClick={() => navigate("/view")}>
                               <i class="fa-solid fa-phone-volume"></i>
                             </button>
@@ -591,7 +662,22 @@ function ChatBoard() {
                         )}
                       </div>
                     </div>
-                    <div className="chat-main">
+                    <div className="chat-main" ref={chatHeight}>
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {loadingMsg && (
+                          <div
+                            style={{ width: "20px" }}
+                            className="loader"
+                          ></div>
+                        )}
+                      </div>
+
                       {messages &&
                         messages.map((message, index, array) => (
                           <>
@@ -615,7 +701,6 @@ function ChatBoard() {
                               ""
                             )}
                             <div
-                              ref={scroll}
                               className={`${
                                 message?.senderId === user.id
                                   ? "user-message"
@@ -623,7 +708,7 @@ function ChatBoard() {
                               }`}
                               key={index}
                             >
-                              {message?.repeatMsg != "null" &&
+                              {message?.repeatMsg !== "null" &&
                               message?.repeatMsg ? (
                                 <div className="repeat-msg">
                                   <div className="repeat-user">
@@ -639,7 +724,9 @@ function ChatBoard() {
                                     </span>
                                     <div className="repeat-message">
                                       <span className="text">
-                                        {message?.repeatMsg?.text}
+                                        {message?.repeatMsg?.text
+                                          ? message.repeatMsg.text
+                                          : "照片"}
                                       </span>
                                     </div>
                                   </div>
@@ -659,10 +746,10 @@ function ChatBoard() {
                                           }
                                     }
                                   >
-                                    {message.text == "" ? (
+                                    {message.text === "" ? (
                                       <span className="img">
                                         <LazyLoadImage
-                                          src={`${url}/msg/img/${message?._id}`}
+                                          src={`${url}/msg/${message?._id}`}
                                           alt="img"
                                           style={{
                                             maxWidth: "200px",
@@ -696,28 +783,41 @@ function ChatBoard() {
                                 </div>
                               ) : (
                                 <>
-                                  {message.text == "" ? (
+                                  {message.text === "" ? (
                                     <span
                                       className="img"
                                       onClick={() => {
                                         setPic(`${message?._id}`);
                                       }}
                                     >
-                                      {message?.img ? (
-                                        <LazyLoadImage
-                                          src={`${url}/msg/img/${message?._id}`}
-                                          alt="img"
-                                          id="img"
-                                          ref={imgRef}
-                                          style={{
-                                            maxWidth: "200px",
-                                            aspectRatio: message?.aspectRatio,
-                                            borderRadius: "5px",
-                                          }}
-                                          effect="blur"
-                                        />
-                                      ) : (
-                                        "照片"
+                                      {message?.aspectRatio && (
+                                        <>
+                                          <img
+                                            src={`${url}/msg/${message?._id}`}
+                                            alt=""
+                                            onLoad={(e) => {
+                                              e.currentTarget.style.display =
+                                                "block";
+                                              let load =
+                                                document.getElementById(
+                                                  `${index}`
+                                                );
+                                              if (load)
+                                                load.style.display = "none";
+                                            }}
+                                            style={{
+                                              maxWidth: "200px",
+                                              aspectRatio: message?.aspectRatio,
+                                              borderRadius: "5px",
+                                            }}
+                                          />
+                                          <img
+                                            id={index}
+                                            src={loadImg}
+                                            width="200px"
+                                            alt=""
+                                          />
+                                        </>
                                       )}
                                     </span>
                                   ) : (
@@ -766,6 +866,11 @@ function ChatBoard() {
                       ) : (
                         ""
                       )}
+                      <div
+                        className="footer"
+                        style={{ height: "1px" }}
+                        ref={scroll}
+                      ></div>
                     </div>
                     {repeatMsg ? (
                       <div className="repeat">
@@ -780,8 +885,9 @@ function ChatBoard() {
                             <i class="fa-solid fa-xmark"></i>
                           </button>
                         </div>
+
                         <span>
-                          <p>{repeatMsg?.text}</p>
+                          <p>{repeatMsg?.text ? repeatMsg.text : "照片"}</p>
                         </span>
                       </div>
                     ) : (
@@ -834,7 +940,7 @@ function ChatBoard() {
 
                       {textmessage && (
                         <button
-                          className={textmessage == "" ? "btn" : "btn istext"}
+                          className={textmessage === "" ? "btn" : "btn istext"}
                           type="button"
                           onClick={() => {
                             sendMessage(

@@ -15,7 +15,7 @@ function UserChat({ chat, user }) {
 
   return (
     <>
-      {recipinetUser && !Loading ? (
+      {recipinetUser ? (
         <button
           title={recipinetUser?.name}
           type="button"
@@ -67,13 +67,15 @@ function UserChat({ chat, user }) {
                     className="user-text"
                     style={isMobile() ? { alignItems: "center" } : {}}
                   >
-                    {
+                    {Loading ? (
+                      ""
+                    ) : (
                       <>
                         {" "}
                         <p
                           className="txt"
                           style={
-                            lastestMessage?.senderId == user?.id ||
+                            lastestMessage?.senderId === user?.id ||
                             lastestMessage?.isRead
                               ? { fontWeight: "400" }
                               : { fontWeight: "600" }
@@ -85,7 +87,7 @@ function UserChat({ chat, user }) {
                             ? "對方輸入中..."
                             : NoReadMessages?.length > 3
                             ? `${NoReadMessages?.length}+則訊息`
-                            : lastestMessage?.senderId == user?.id
+                            : lastestMessage?.senderId === user?.id
                             ? `你:${lastestMessage?.text}`
                             : `${lastestMessage?.text}`}
                         </p>
@@ -103,7 +105,7 @@ function UserChat({ chat, user }) {
                             : moment(lastestMessage?.createdAt).fromNow()}
                         </p>
                       </>
-                    }
+                    )}
                   </div>
                 ) : (
                   <div
@@ -123,7 +125,9 @@ function UserChat({ chat, user }) {
             {lastestMessage !== undefined &&
             lastestMessage?.senderId !== user?.id ? (
               <div className="time">
-                <div className={lastestMessage?.isRead ? "" : "point"}></div>
+                <div
+                  className={lastestMessage?.isRead || Loading ? "" : "point"}
+                ></div>
               </div>
             ) : (
               ""

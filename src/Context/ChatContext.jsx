@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-} from "react";
+import { createContext, useCallback, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { io, emit, on, Socket } from "socket.io-client";
 import { url } from "../servirce";
@@ -52,6 +45,9 @@ export const ChatContextProvider = ({ children, user }) => {
   const [mysocket, setMysocket] = useState("");
   const [idToCall, setIdToCall] = useState(null);
   const [callType, setcallType] = useState(false);
+  const [limitMsg, setLimitMsg] = useState(20);
+  const [msgCount, setMsgCount] = useState(0);
+  const [loadingMsg, setLoadingMsg] = useState(false);
   const recpientVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
@@ -204,24 +200,37 @@ export const ChatContextProvider = ({ children, user }) => {
   useEffect(() => {
     const getMessage = async () => {
       try {
-        const response = await fetch(`${url}/msg/${currentChat?._id}`);
+        setLoadingMsg(true);
+        const response = await fetch(
+          `${url}/msg/${currentChat?._id}/${limitMsg}`
+        );
         const data = await response.json();
-        setMessages(data);
+        setMessages(data?.messages);
+        setMsgCount(data?.messagesCount);
         setLoadingUser(false);
-      } catch (err) {}
+      } catch (err) {
+        console.errror(err);
+      } finally {
+        setLoadingMsg(false);
+      }
     };
     getMessage();
-  }, [currentChat, newMessage]);
+  }, [currentChat, newMessage, limitMsg]);
+
+  const getlimitMsg = useCallback((limit) => {
+    setLimitMsg(limit);
+  }, []);
 
   const updateCurrentChat = useCallback((chat) => {
     const recipientId = currentChat?.members.find((id) => id !== user?.id);
-    if (chat?.members[0] == recipientId || chat?.members[1] == recipientId)
+    if (chat?.members[0] === recipientId || chat?.members[1] === recipientId)
       return;
     setLoadingUser(true);
     setNewMessage(null);
     setMessages(null);
     setCurrentChat(chat);
-  });
+    setLimitMsg(20);
+  }, []);
 
   const sendMessage = useCallback(
     async (
@@ -258,7 +267,9 @@ export const ChatContextProvider = ({ children, user }) => {
         setNewMessage(data);
         setMessages((prev) => [...prev, data]);
         setSendLoading(false);
-      } catch (err) {}
+      } catch (err) {
+        console.error(err);
+      }
     },
     []
   );
@@ -317,7 +328,7 @@ export const ChatContextProvider = ({ children, user }) => {
   );
 
   const markthisread = useCallback(async (chatId, senderId) => {
-    if (senderId == user.id) return;
+    if (senderId === user.id) return;
     if (chatId && senderId) {
       try {
         const response = await fetch(`${url}/msg/read/${chatId}/${senderId}`);
@@ -329,7 +340,7 @@ export const ChatContextProvider = ({ children, user }) => {
   }, []);
 
   const search = useCallback((name, userId) => {
-    if (name == "") return setSearchUser(null);
+    if (name === "") return setSearchUser(null);
     fetch(`${url}/users/findname/${name}`)
       .then((res) => res.json())
       .then((data) => {
@@ -378,26 +389,29 @@ export const ChatContextProvider = ({ children, user }) => {
     return isMobile;
   }, []);
 
-  const createFriend = useCallback(async (member1, member2) => {
-    if (!member1 && !member2) return;
-    try {
-      setLoading(true);
-      const response = await fetch(`${url}/friend/create`, {
-        method: "POST",
-        body: JSON.stringify({
-          firstId: member1,
-          secondId: member2,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      const formattedData = await data.members?.find((id) => id !== user.id);
-      console.log(formattedData);
-      setFriend((prev) => [...prev, formattedData]);
-      setAllFriend((prev) => [...prev, data]);
-      setLoading(false);
-    } catch (error) {}
-  }, []);
+  const createFriend = useCallback(
+    async (member1, member2) => {
+      if (!member1 && !member2) return;
+      try {
+        setLoading(true);
+        const response = await fetch(`${url}/friend/create`, {
+          method: "POST",
+          body: JSON.stringify({
+            firstId: member1,
+            secondId: member2,
+          }),
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await response.json();
+        const formattedData = await data.members?.find((id) => id !== user.id);
+        console.log(formattedData);
+        setFriend((prev) => [...prev, formattedData]);
+        setAllFriend((prev) => [...prev, data]);
+        setLoading(false);
+      } catch (error) {}
+    },
+    [0]
+  );
   const delFriend = useCallback(async (member1, member2) => {
     setLoading(true);
     const response = await fetch(`${url}/friend/delete`, {
@@ -629,6 +643,10 @@ export const ChatContextProvider = ({ children, user }) => {
         callType,
         isOnCall,
         userVideo,
+        getlimitMsg,
+        loadingMsg,
+        limitMsg,
+        msgCount,
       }}
     >
       {children}
