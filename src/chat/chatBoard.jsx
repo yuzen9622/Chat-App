@@ -11,6 +11,8 @@ import { url } from "../servirce";
 import avarter from "../img/user.png";
 import { useNavigate } from "react-router-dom";
 import loadImg from "../img/imgLoad.jpg";
+import logo from "../img/chat.png";
+
 function ChatBoard() {
   const {
     currentChat,
@@ -26,81 +28,63 @@ function ChatBoard() {
     callUser,
     isOnCall,
     recpientName,
-    getlimitMsg,
     loadingMsg,
-    limitMsg,
-    msgCount,
   } = useContext(ChatContext);
 
-  const { user } = useContext(AuthContext);
+  const { user, getAvatar } = useContext(AuthContext);
   const { recipinetUser, loading } = useFetchRecipinet(currentChat, user);
   const { lastestMessage } = useFetchLastMessage(currentChat);
 
   const [textmessage, setTextmessage] = useState("");
   const [repeatMsg, setRepeatMsg] = useState(null);
+  const [Avatar, setAvatar] = useState(null);
   const [pic, setPic] = useState(null);
-  const [limit, setLimit] = useState(20);
-  const scroll = useRef();
+  const [limit, setLimit] = useState(40);
+  const scroll = useRef(null);
   const imgRef = useRef();
-  const chatHeight = useRef();
+  const chatHeight = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loadingUser && limitMsg === 20) {
-      scroll.current?.scrollIntoView({ behavior: "instant" });
+    if (!chatHeight.current) {
+      chatHeight.current = document.getElementsByClassName("chat-main")[0];
     }
-  }, [currentChat, messages, loadingUser, limitMsg]);
-  useEffect(() => {
-    setLimit(20);
-  }, [currentChat]);
-  useEffect(() => {
-    const getNewMsg = () => {
-      if (limit >= msgCount) return;
-      const scrollTop = chatHeight.current?.scrollTop;
-      if (scrollTop === 0) {
-        setTimeout(() => {
-          setLimit((prev) => prev + 10);
-        }, 500);
-      }
-    };
+    const footer = chatHeight.current?.scrollHeight;
 
-    const handleScroll = () => {
-      getNewMsg();
-    };
-
-    const chatMain = document.querySelector(".chat-main");
-    if (chatMain && !loadingUser && !loadingMsg) {
-      chatMain.addEventListener("scroll", handleScroll);
+    if (!loadingUser && chatHeight.current) {
+      chatHeight.current?.scrollTo(0, footer);
     }
-    return () => {
-      if (chatMain) {
-        chatMain.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [currentChat, loadingUser, loadingMsg, msgCount]);
-
-  useEffect(() => {
-    console.log(limit, msgCount);
-    if (limit === 20) return;
-
-    getlimitMsg(limit);
-  }, [limit, msgCount]);
-
-  useEffect(() => {
-    if (!loadingMsg && limitMsg !== 20) chatHeight.current?.scrollTo(0, 100);
-  }, [loadingMsg]);
+  }, [currentChat, messages, loadingUser, limit]);
 
   useEffect(() => {
     setRepeatMsg(null);
   }, [currentChat, SendLoading]);
+
+  useEffect(() => {
+    getAvatar(recipinetUser?._id).then((res) => {
+      setAvatar(res || avarter);
+    });
+  }, [recipinetUser, getAvatar]);
 
   const spliceEmail = (email) => {
     const mailId = email.split("@");
     const id = "@" + mailId[0];
     return id;
   };
+  const isLink = (str) => {
+    return str.substr(0, 4) === "http" || str.substr(0, 5) === "https"
+      ? true
+      : false;
+  };
 
-  const dataTime = (firstTime, nextTime, PreviousTime) => {
+  const dataTime = (
+    firstTime,
+    nextTime,
+    PreviousTime,
+    firstIndex,
+    nextIndex,
+    previousIndex
+  ) => {
     var firstmsg = new Date(firstTime);
 
     let day = firstmsg.getDate();
@@ -214,14 +198,12 @@ function ChatBoard() {
                               navigate(`/user/${recipinetUser?._id}`)
                             }
                           >
-                            <LazyLoadImage
-                              src={
-                                recipinetUser?.Avatar
-                                  ? `${url}/users/avatar/${recipinetUser?._id}`
-                                  : avarter
-                              }
-                              alt="img"
-                            />
+                            {Avatar ? (
+                              <LazyLoadImage src={Avatar} alt="img" />
+                            ) : (
+                              <div className="img-glimmer-line"></div>
+                            )}
+
                             <div
                               className={
                                 onlineUser?.some(
@@ -564,9 +546,16 @@ function ChatBoard() {
         /**電腦版 **/
         <>
           {!recipinetUser ? (
-            <p style={{ textAlign: "center", width: "100%" }}>
-              No conversation yet...
-            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <img src={logo} width={70} height={70} alt="logo" />
+            </div>
           ) : (
             <>
               <div className="chat-board">
@@ -595,14 +584,11 @@ function ChatBoard() {
                             navigate(`/user/${recipinetUser?._id}`)
                           }
                         >
-                          <img
-                            src={
-                              recipinetUser?.Avatar
-                                ? `${url}/users/avatar/${recipinetUser?._id}`
-                                : avarter
-                            }
-                            alt=""
-                          />
+                          {Avatar ? (
+                            <LazyLoadImage src={Avatar} alt="img" />
+                          ) : (
+                            <div className="img-glimmer-line"></div>
+                          )}
                           <div
                             className={
                               onlineUser?.some(
@@ -679,20 +665,26 @@ function ChatBoard() {
                       </div>
 
                       {messages &&
-                        messages.map((message, index, array) => (
+                        messages?.map((message, index, array) => (
                           <>
                             {dataTime(
                               message?.createdAt,
                               array[index + 1]?.createdAt,
-                              array[index - 1]?.createdAt
+                              array[index - 1]?.createdAt,
+                              index,
+                              index + 1,
+                              index - 1
                             ) !== null ? (
-                              <div className="data-time">
+                              <div className="data-time" key={index}>
                                 <span>
                                   {moment(
                                     dataTime(
                                       message?.createdAt,
                                       array[index + 1]?.createdAt,
-                                      array[index - 1]?.createdAt
+                                      array[index - 1]?.createdAt,
+                                      index,
+                                      index + 1,
+                                      index - 1
                                     )
                                   ).format("L")}
                                 </span>
@@ -710,7 +702,7 @@ function ChatBoard() {
                             >
                               {message?.repeatMsg !== "null" &&
                               message?.repeatMsg ? (
-                                <div className="repeat-msg">
+                                <div className="repeat-msg" key={index}>
                                   <div className="repeat-user">
                                     <span>
                                       已回覆
@@ -820,6 +812,17 @@ function ChatBoard() {
                                         </>
                                       )}
                                     </span>
+                                  ) : isLink(message.text) ? (
+                                    <div className="message">
+                                      <a
+                                        href={`${message.text}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text"
+                                      >
+                                        {message.text}
+                                      </a>
+                                    </div>
                                   ) : (
                                     <div className="message">
                                       <span className="text">
@@ -858,7 +861,7 @@ function ChatBoard() {
                       {typingUser.some(
                         (uid) => uid.id === recipinetUser?._id
                       ) ? (
-                        <div className="other-message typing" ref={scroll}>
+                        <div className="other-message typing">
                           <div className="message">
                             <div className="typing-loader"></div>
                           </div>
@@ -926,15 +929,18 @@ function ChatBoard() {
                           placeholder="Message..."
                           fontFamily="Helvetica, Arial, sans-serif"
                           cleanOnEnter
-                          onEnter={() =>
+                          onEnter={() => {
                             sendMessage(
                               textmessage,
                               user,
                               currentChat._id,
                               false,
                               repeatMsg
-                            )
-                          }
+                            );
+                            scroll.current?.scrollIntoView({
+                              behavior: "instant",
+                            });
+                          }}
                         />
                       )}
 

@@ -162,6 +162,7 @@
 .follow-site {
     display: flex;
     flex-wrap: wrap;
+    width: 100%;
   }
   
   .follow-user {

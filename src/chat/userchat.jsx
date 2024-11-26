@@ -1,4 +1,4 @@
-import React, { lazy, useEffect } from "react";
+import React, { lazy, useEffect, useState } from "react";
 import { useFetchLastMessage, useFetchRecipinet } from "../api/api";
 import avarter from "../img/user.png";
 
@@ -6,12 +6,24 @@ import { useContext } from "react";
 import { ChatContext } from "../Context/ChatContext";
 import { url } from "../servirce";
 import moment from "moment";
+import { AuthContext } from "../Context/AuthContext";
 
 function UserChat({ chat, user }) {
-  const { onlineUser, markthisread, isMobile, typingUser } =
+  const { onlineUser, markthisread, isMobile, typingUser, currentChat } =
     useContext(ChatContext);
+  const { getAvatar } = useContext(AuthContext);
   const { recipinetUser } = useFetchRecipinet(chat, user);
   const { lastestMessage, NoReadMessages, Loading } = useFetchLastMessage(chat);
+  const [Avatar, setAvatar] = useState(null);
+  useEffect(() => {
+    getAvatar(recipinetUser?._id).then((res) => {
+      setAvatar(res || avarter);
+    });
+  }, [recipinetUser]);
+  const isTyping = typingUser.some((uid) => uid.id === recipinetUser?._id);
+  const hasUnreadMessages = NoReadMessages?.length > 3;
+  const isLastMessageFromUser = lastestMessage?.senderId === user?.id;
+  const lastMessageText = lastestMessage?.text || "";
 
   return (
     <>
@@ -19,7 +31,13 @@ function UserChat({ chat, user }) {
         <button
           title={recipinetUser?.name}
           type="button"
-          className="tab"
+          className={`tab ${
+            currentChat?.members?.some(
+              (userId) => userId === recipinetUser?._id
+            )
+              ? "active"
+              : ""
+          }`}
           style={
             isMobile()
               ? { backgroundColor: "transparent", borderRadius: "0" }
@@ -38,14 +56,11 @@ function UserChat({ chat, user }) {
                 className="img-online"
                 style={isMobile() ? { marginRight: "20px" } : {}}
               >
-                <img
-                  src={
-                    recipinetUser?.Avatar
-                      ? `${url}/users/avatar/${recipinetUser?._id}`
-                      : avarter
-                  }
-                  alt="img"
-                />
+                {Avatar ? (
+                  <img src={Avatar} alt="" />
+                ) : (
+                  <div className="img-glimmer-line"></div>
+                )}
                 <div
                   className={
                     onlineUser?.some(
@@ -81,15 +96,18 @@ function UserChat({ chat, user }) {
                               : { fontWeight: "600" }
                           }
                         >
-                          {typingUser.some(
-                            (uid) => uid.id === recipinetUser?._id
-                          )
-                            ? "對方輸入中..."
-                            : NoReadMessages?.length > 3
-                            ? `${NoReadMessages?.length}+則訊息`
-                            : lastestMessage?.senderId === user?.id
-                            ? `你:${lastestMessage?.text}`
-                            : `${lastestMessage?.text}`}
+                          {isTyping && "對方輸入中..."}
+                          {!isTyping &&
+                            hasUnreadMessages &&
+                            `${NoReadMessages.length}+則訊息`}
+                          {!isTyping &&
+                            (isLastMessageFromUser
+                              ? lastMessageText !== ""
+                                ? `你: ${lastMessageText}`
+                                : `你: 已傳送照片`
+                              : lastMessageText !== ""
+                              ? `${lastMessageText}`
+                              : `對方傳送照片`)}
                         </p>
                         <p
                           className="text-time"

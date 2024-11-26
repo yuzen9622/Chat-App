@@ -8,7 +8,7 @@ function Follow() {
   const { user } = useContext(AuthContext);
   return (
     <div className="follow">
-      <div style={{ width: "auto", maxWidth: "400px" }}>
+      <div style={{ width: "100%", maxWidth: "400px" }}>
         <div style={{ margin: "5px", padding: "0 15px" }}>
           <h1>朋友</h1>
           <p style={{ color: "rgb(115, 115, 115)" }}>

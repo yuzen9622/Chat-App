@@ -14,6 +14,7 @@ function Sign() {
   const [Avatar, setAvatar] = useState(null);
   const sign = (e) => {
     setIsSign(true);
+
     var formData = new FormData();
     formData.append("name", signInfo.name);
     formData.append("email", signInfo.email);
@@ -29,7 +30,7 @@ function Sign() {
       .then((res) => res.json())
       .then((data) => {
         var datas = {};
-        if (data._id) {
+        if (data?._id) {
           setSignStatus("註冊成功");
           datas = {
             id: data._id,
@@ -38,9 +39,8 @@ function Sign() {
             email: data.email,
             bio: data.bio,
           };
-          localStorage.setItem("User", JSON.stringify(datas));
-          navigate("/");
-          window.location.reload();
+          updateSignInfo(datas);
+          navigate("/sign/EmailValid");
         } else {
           setSignStatus(data);
         }

@@ -6,6 +6,18 @@
     height: 90%;
 }
 
+::-webkit-scrollbar {
+    width: 5px; /*右側捲軸寬度*/
+    height: 5px; /*下方捲軸高度*/
+  }
+::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+
+::-webkit-scrollbar-thumb {
+    background:#33333374; 
+}
+
 .userlist,
 .chat-list button {
     position: relative;
@@ -261,6 +273,7 @@ font-size: 14px;
     border-top: 1px solid rgb(239, 239, 239);
     padding: 5px;
     overflow-y: auto;
+    transition: all 1s;
 }
 
 .chat-input {

@@ -13,6 +13,7 @@ import EditProfile from "./setting/Edit-Profile";
 import UserProfile from "./setting/UserProfile";
 import View from "./view/view";
 import call from "./audio/call.mp3";
+import EmailValid from "./account/EmailValid";
 function App() {
   const { user } = useContext(AuthContext);
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/user/:id" Component={UserProfile} />
           <Route path="/Edit" element={<EditProfile />} />
           <Route path="/view" element={<View />} />
+          <Route path="/sign/EmailValid" element={<EmailValid />} />
           <Route
             path="/"
             element={user ? <Navigate to="/chat" /> : <Navigate to="/login" />}

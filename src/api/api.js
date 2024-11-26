@@ -44,7 +44,9 @@ export const useFetchLastMessage = (chat) => {
         setLastestMessage(lastmessage);
         setNoReadMessage(noReadMessage);
         setLoading(false);
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     };
     getMessage();
   }, [newMessage, notifications, messages]);

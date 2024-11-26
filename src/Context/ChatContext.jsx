@@ -1,9 +1,17 @@
-import { createContext, useCallback, useEffect, useState, useRef } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { io, emit, on, Socket } from "socket.io-client";
-import { url } from "../servirce";
+import { socket_server, url } from "../servirce";
 import * as process from "process";
 import Peer from "simple-peer";
+import { AuthContext } from "./AuthContext";
 window.global = window;
 window.process = process;
 window.Buffer = [];
@@ -11,6 +19,7 @@ window.Buffer = [];
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children, user }) => {
+  const auth = useContext(AuthContext)?.user;
   const nagative = useNavigate();
   const [userChats, setUserChat] = useState(null);
   const [potentialChats, setPotentialChats] = useState([]);
@@ -45,15 +54,16 @@ export const ChatContextProvider = ({ children, user }) => {
   const [mysocket, setMysocket] = useState("");
   const [idToCall, setIdToCall] = useState(null);
   const [callType, setcallType] = useState(false);
-  const [limitMsg, setLimitMsg] = useState(20);
+  const [limitMsg, setLimitMsg] = useState(40);
   const [msgCount, setMsgCount] = useState(0);
   const [loadingMsg, setLoadingMsg] = useState(false);
+
   const recpientVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
 
   useEffect(() => {
-    const newSocket = io("https://chat-socket-97vj.onrender.com");
+    const newSocket = io(socket_server);
     setsocket(newSocket);
 
     return () => {
@@ -101,19 +111,19 @@ export const ChatContextProvider = ({ children, user }) => {
     setTyping(status);
   }, []);
 
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (isOnCall) return;
-      if (!document.hidden && !isOnCall) window.location.reload();
-      setHidden(document.hidden);
-    };
+  // useEffect(() => {
+  //   const handleVisibilityChange = () => {
+  //     if (isOnCall) return;
+  //     if (!document.hidden && !isOnCall && auth) window.location.reload();
+  //     setHidden(document.hidden);
+  //   };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+  //   document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [isOnCall]);
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //   };
+  // }, [isOnCall]);
   useEffect(() => {
     if (socket === null) return;
 
@@ -128,17 +138,28 @@ export const ChatContextProvider = ({ children, user }) => {
     if (socket === null) return;
 
     const handleReceivedMessage = (res) => {
-      console.log(res);
       if (currentChat?._id === res.chatId) {
         setMessages((prev) => [...prev, res]);
       }
+      setNotifications((prev) => [...prev, res]);
     };
-
+    socket.on("getMarkRead", (chatId) => {
+      if (chatId === currentChat?._id) {
+        setMessages((prev) => {
+          const newMsg = prev.map((msg) => ({ ...msg, isRead: true }));
+          return newMsg;
+        });
+      }
+    });
     socket.on("getMessage", handleReceivedMessage);
     socket.on("getNotification", (res) => {
       const ischatOpen = currentChat?.members.some((id) => id === res.senderId);
 
       if (ischatOpen) {
+        socket?.emit("sendMarkRead", {
+          recipientId: res.senderId,
+          chatId: currentChat?._id,
+        });
         markthisread(currentChat?._id, res.senderId);
       } else {
         setNotifications((prev) => [res, ...prev]);
@@ -198,39 +219,48 @@ export const ChatContextProvider = ({ children, user }) => {
   }, [user, notifications, AllFriend]);
 
   useEffect(() => {
+    let cancel = false;
     const getMessage = async () => {
       try {
         setLoadingMsg(true);
-        const response = await fetch(
-          `${url}/msg/${currentChat?._id}/${limitMsg}`
-        );
-        const data = await response.json();
-        setMessages(data?.messages);
-        setMsgCount(data?.messagesCount);
-        setLoadingUser(false);
+        const response = await fetch(`${url}/msg/${currentChat?._id}/10000`);
+        if (!cancel) {
+          const data = await response.json();
+          setMessages(data?.messages);
+          setMsgCount(data?.messagesCount);
+          setLoadingUser(false);
+        }
       } catch (err) {
-        console.errror(err);
+        console.error(err);
       } finally {
         setLoadingMsg(false);
       }
     };
     getMessage();
+    return () => {
+      cancel = true;
+    };
   }, [currentChat, newMessage, limitMsg]);
 
   const getlimitMsg = useCallback((limit) => {
     setLimitMsg(limit);
   }, []);
 
-  const updateCurrentChat = useCallback((chat) => {
-    const recipientId = currentChat?.members.find((id) => id !== user?.id);
-    if (chat?.members[0] === recipientId || chat?.members[1] === recipientId)
-      return;
-    setLoadingUser(true);
-    setNewMessage(null);
-    setMessages(null);
-    setCurrentChat(chat);
-    setLimitMsg(20);
-  }, []);
+  const updateCurrentChat = useCallback(
+    (chat) => {
+      if (!chat) return setCurrentChat(null);
+      if (chat?._id === currentChat?._id) return;
+      const recipientId = currentChat?.members.find((id) => id !== user?.id);
+      if (chat?.members[0] === recipientId || chat?.members[1] === recipientId)
+        return setCurrentChat(null);
+      setLoadingUser(true);
+      setNewMessage(null);
+      setMessages(null);
+      setCurrentChat(chat);
+      setLimitMsg(40);
+    },
+    [currentChat]
+  );
 
   const sendMessage = useCallback(
     async (
@@ -327,17 +357,22 @@ export const ChatContextProvider = ({ children, user }) => {
     []
   );
 
-  const markthisread = useCallback(async (chatId, senderId) => {
-    if (senderId === user.id) return;
-    if (chatId && senderId) {
-      try {
-        const response = await fetch(`${url}/msg/read/${chatId}/${senderId}`);
-        const data = await response.json();
-
-        setMessages(data);
-      } catch (error) {}
-    }
-  }, []);
+  const markthisread = useCallback(
+    async (chatId, senderId) => {
+      if (senderId === user.id) return;
+      if (chatId && senderId) {
+        try {
+          await fetch(`${url}/msg/read/${chatId}/${senderId}`);
+          socket?.emit("sendMarkRead", { recipientId: senderId, chatId });
+          setMessages((prev) => {
+            const newMsg = prev?.map((msg) => ({ ...msg, isRead: true }));
+            return newMsg;
+          });
+        } catch (error) {}
+      }
+    },
+    [socket, messages]
+  );
 
   const search = useCallback((name, userId) => {
     if (name === "") return setSearchUser(null);
@@ -548,7 +583,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
     const peer = new Peer({
       initiator: false,
-      trickle: true,
+      trickle: false,
       stream: stream,
     });
     peer.on("signal", (data) => {

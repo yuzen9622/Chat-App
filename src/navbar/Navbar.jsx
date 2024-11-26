@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "./navbar.css";
 import { AuthContext } from "../Context/AuthContext";
@@ -9,10 +9,16 @@ import Icon from "../img/icon.png";
 import { ChatContext } from "../Context/ChatContext";
 import chat from "../img/chat.png";
 function Navbar() {
-  const { user, logoutUser } = useContext(AuthContext);
+  const { user, logoutUser, getAvatar } = useContext(AuthContext);
   const { allUsers } = useContext(ChatContext);
+  const [img, setImg] = useState(null);
   const User = allUsers?.find((id) => id._id === user.id);
 
+  useEffect(() => {
+    getAvatar(user?.id).then((res) => {
+      setImg(res || avarter);
+    });
+  }, [user, getAvatar, User]);
   return (
     <div className="nav">
       <nav>
@@ -41,18 +47,11 @@ function Navbar() {
               </NavLink>
               <NavLink to={"/Profile"}>
                 <span>
-                  {" "}
-                  {User ? (
-                    <img
-                      src={
-                        user?.Avatar
-                          ? `${url}/users/avatar/${user?.id}`
-                          : avarter
-                      }
-                    />
+                  {img ? (
+                    <img src={img} alt="" />
                   ) : (
                     <div className="img-glimmer-line"></div>
-                  )}{" "}
+                  )}
                 </span>
                 <p>Profile</p>
               </NavLink>

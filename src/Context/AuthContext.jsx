@@ -12,10 +12,13 @@ export const AuthContextProvider = ({ children }) => {
   const navgate = useNavigate();
   const [loadingImg, setLoadingImg] = useState(false);
   const [signInfo, setSignInfo] = useState({
+    _id: "",
     name: "",
     email: "",
     password: "",
     img: null,
+    bio: "",
+    Avatar: null,
   });
   console.log(signInfo);
   const updateSignInfo = useCallback((info) => {
@@ -51,8 +54,7 @@ export const AuthContextProvider = ({ children }) => {
           email: data.email,
           bio: data.bio,
         };
-        sessionStorage.setItem("User", JSON.stringify(datas));
-        window.location.reload();
+
         setLoadingImg(false);
       } catch (error) {}
     });
@@ -87,8 +89,27 @@ export const AuthContextProvider = ({ children }) => {
       navgate("/Profile");
       window.location.reload();
       setLoadingImg(false);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
+
+  const getAvatar = useCallback(async (userId) => {
+    try {
+      if (!userId) return;
+      const res = await fetch(`${url}/users/avatar/${userId}`);
+      if (!res.ok) {
+        throw new Error("response error", res.status);
+      }
+
+      const imgBlob = await res.blob();
+      return URL.createObjectURL(imgBlob);
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -99,6 +120,7 @@ export const AuthContextProvider = ({ children }) => {
         updateAvatar,
         updateUser,
         loadingImg,
+        getAvatar,
       }}
     >
       {children}
