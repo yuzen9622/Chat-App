@@ -77,14 +77,7 @@ function ChatBoard() {
       : false;
   };
 
-  const dataTime = (
-    firstTime,
-    nextTime,
-    PreviousTime,
-    firstIndex,
-    nextIndex,
-    previousIndex
-  ) => {
+  const dataTime = (firstTime, nextTime, PreviousTime) => {
     var firstmsg = new Date(firstTime);
 
     let day = firstmsg.getDate();

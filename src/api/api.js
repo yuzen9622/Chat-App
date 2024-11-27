@@ -34,7 +34,7 @@ export const useFetchLastMessage = (chat) => {
   useEffect(() => {
     const getMessage = async () => {
       try {
-        const response = await fetch(`${url}/msg/${chat?._id}/10`);
+        const response = await fetch(`${url}/msg/${chat?._id}/5`);
         let data = await response.json();
         data = data?.messages;
         const lastmessage = data[data?.length - 1];

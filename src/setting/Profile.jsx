@@ -31,7 +31,14 @@ function Profile() {
       {!loading ? (
         <>
           <div className="profile-img">
-            <img src={userAvatar && userAvatar} alt="user-avatar" />
+            {!userAvatar ? (
+              <div
+                className="img-glimmer-line"
+                style={{ width: "100px", height: "100px" }}
+              ></div>
+            ) : (
+              <img src={userAvatar} alt="user-avatar" />
+            )}
           </div>
 
           <div className="profile-user">

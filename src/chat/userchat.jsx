@@ -1,7 +1,6 @@
 import React, { lazy, useEffect, useState } from "react";
 import { useFetchLastMessage, useFetchRecipinet } from "../api/api";
 import avarter from "../img/user.png";
-
 import { useContext } from "react";
 import { ChatContext } from "../Context/ChatContext";
 import { url } from "../servirce";
@@ -101,6 +100,7 @@ function UserChat({ chat, user }) {
                             hasUnreadMessages &&
                             `${NoReadMessages.length}+則訊息`}
                           {!isTyping &&
+                            !hasUnreadMessages &&
                             (isLastMessageFromUser
                               ? lastMessageText !== ""
                                 ? `你: ${lastMessageText}`
@@ -120,7 +120,8 @@ function UserChat({ chat, user }) {
                             (uid) => uid.id === recipinetUser?._id
                           )
                             ? "現在"
-                            : moment(lastestMessage?.createdAt).fromNow()}
+                            : moment(lastestMessage?.createdAt).fromNow(true) +
+                              "前"}
                         </p>
                       </>
                     )}
@@ -144,7 +145,12 @@ function UserChat({ chat, user }) {
             lastestMessage?.senderId !== user?.id ? (
               <div className="time">
                 <div
-                  className={lastestMessage?.isRead || Loading ? "" : "point"}
+                  className={
+                    lastestMessage?.isRead ||
+                    currentChat?._id === lastMessageText?.chat_id
+                      ? ""
+                      : "point"
+                  }
                 ></div>
               </div>
             ) : (

@@ -146,7 +146,7 @@ export const ChatContextProvider = ({ children, user }) => {
     socket.on("getMarkRead", (chatId) => {
       if (chatId === currentChat?._id) {
         setMessages((prev) => {
-          const newMsg = prev.map((msg) => ({ ...msg, isRead: true }));
+          const newMsg = prev?.map((msg) => ({ ...msg, isRead: true }));
           return newMsg;
         });
       }

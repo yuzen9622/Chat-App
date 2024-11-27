@@ -50,7 +50,6 @@ export const AuthContextProvider = ({ children }) => {
         const datas = {
           id: data._id,
           name: data.name,
-          Avatar: data.Avatar,
           email: data.email,
           bio: data.bio,
         };
@@ -61,7 +60,6 @@ export const AuthContextProvider = ({ children }) => {
     input.click();
   }, []);
   const updateUser = useCallback(async (id, name, email, bio) => {
-    console.log("click");
     try {
       if (!id || !name || !email) return;
       setLoadingImg(true);
@@ -87,7 +85,7 @@ export const AuthContextProvider = ({ children }) => {
       sessionStorage.setItem("User", JSON.stringify(datas));
 
       navgate("/Profile");
-      window.location.reload();
+
       setLoadingImg(false);
     } catch (error) {
       console.error(error);

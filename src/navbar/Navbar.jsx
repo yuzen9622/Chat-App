@@ -9,7 +9,7 @@ import Icon from "../img/icon.png";
 import { ChatContext } from "../Context/ChatContext";
 import chat from "../img/chat.png";
 function Navbar() {
-  const { user, logoutUser, getAvatar } = useContext(AuthContext);
+  const { user, logoutUser, getAvatar, loadingImg } = useContext(AuthContext);
   const { allUsers } = useContext(ChatContext);
   const [img, setImg] = useState(null);
   const User = allUsers?.find((id) => id._id === user.id);
@@ -18,7 +18,7 @@ function Navbar() {
     getAvatar(user?.id).then((res) => {
       setImg(res || avarter);
     });
-  }, [user, getAvatar, User]);
+  }, [user, getAvatar, User, loadingImg]);
   return (
     <div className="nav">
       <nav>

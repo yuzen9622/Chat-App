@@ -68,6 +68,7 @@ function Sign() {
           src={Avatar ? URL.createObjectURL(Avatar) : avatar}
           alt=""
           style={{ width: "80px", borderRadius: "50%", height: "80px" }}
+          onClick={createAvatar}
         />
         <button
           style={{
@@ -76,7 +77,7 @@ function Sign() {
             minWidth: "0",
             position: "absolute",
             backgroundColor: "#aaa",
-
+            cursor: "pointer",
             top: "60%",
             left: "53%",
             margin: "0",
