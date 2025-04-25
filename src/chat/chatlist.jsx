@@ -85,13 +85,13 @@ function Chatlist() {
               userChats?.map((chat, index) => (
                 <div
                   className="userchat-list"
-                  key={index}
+                  key={chat._id}
                   onClick={() => {
                     updateCurrentChat(chat);
                     active(index);
                   }}
                 >
-                  <UserChat user={user} chat={chat} key={index} />
+                  <UserChat user={user} chat={chat} key={chat._id} />
                 </div>
               ))
             ) : (

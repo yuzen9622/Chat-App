@@ -691,7 +691,6 @@ function ChatBoard() {
                                   ? "user-message"
                                   : "other-message"
                               }`}
-                              key={index}
                             >
                               {message?.repeatMsg !== "null" &&
                               message?.repeatMsg ? (

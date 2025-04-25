@@ -31,7 +31,8 @@ export default function EmailValid() {
     }
   };
 
-  const handleOTPBtn = async () => {
+  const handleOTPBtn = async (e) => {
+    e.preventDefault();
     let numINput = "";
     inputs.forEach((element) => {
       numINput += element;
